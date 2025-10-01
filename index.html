@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Eskul Sekolah</title>
+    <!-- Menggunakan Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menggunakan font Inter dari Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mengaplikasikan font Inter ke seluruh halaman */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style untuk transisi antar halaman */
+        .page {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .page.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            position: absolute;
+        }
+        /* Styling untuk Modal */
+        .modal-backdrop {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-backdrop > div {
+            transition: transform 0.3s ease-in-out;
+        }
+        /* Animasi loading spinner */
+        .spinner {
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            border-top: 2px solid #3b82f6;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        .spinner-white {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #fff;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+
+    <!-- Kontainer Halaman Masuk -->
+    <div id="login-page" class="page w-full max-w-md">
+        <div class="bg-white shadow-xl rounded-2xl p-8 space-y-6 border border-gray-200">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-blue-600">Selamat Datang</h1>
+                <p class="text-gray-500 mt-2">Masuk untuk melihat jadwal eskul</p>
+            </div>
+           
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label for="login-username" class="block text-sm font-medium text-gray-600 mb-2">Username</label>
+                    <input type="text" id="login-username" name="username" class="w-full bg-gray-50 border border-gray-300 text-gray-800 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" placeholder="Masukkan username Anda" required>
+                </div>
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-600 mb-2">Password</label>
+                    <input type="password" id="login-password" name="password" class="w-full bg-gray-50 border border-gray-300 text-gray-800 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" placeholder="Masukkan password Anda" required>
+                </div>
+                <p id="login-error-message" class="text-red-500 text-sm text-center hidden">Username atau password salah!</p>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    Masuk
+                </button>
+            </form>
+             <p class="text-center text-sm text-gray-500 pt-2">
+                Belum punya akun?
+                <a href="#" id="show-signup-link" class="font-medium text-blue-600 hover:underline">Daftar di sini</a>
+            </p>
+        </div>
+    </div>
+
+
+    <!-- Kontainer Halaman Daftar -->
+    <div id="signup-page" class="page hidden w-full max-w-md">
+         <div class="bg-white shadow-xl rounded-2xl p-8 space-y-6 border border-gray-200">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-blue-600">Buat Akun Baru</h1>
+                <p class="text-gray-500 mt-2">Isi data di bawah untuk mendaftar</p>
+            </div>
+           
+            <form id="signup-form" class="space-y-4">
+                <div>
+                    <label for="signup-username" class="block text-sm font-medium text-gray-600 mb-2">Username Baru</label>
+                    <input type="text" id="signup-username" class="w-full bg-gray-50 border border-gray-300 text-gray-800 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" placeholder="Pilih username" required>
+                </div>
+                <div>
+                    <label for="signup-password" class="block text-sm font-medium text-gray-600 mb-2">Password Baru</label>
+                    <input type="password" id="signup-password" class="w-full bg-gray-50 border border-gray-300 text-gray-800 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" placeholder="Minimal 8 karakter" required>
+                </div>
+                <p id="signup-message" class="text-sm text-center"></p>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    Daftar
+                </button>
+            </form>
+             <p class="text-center text-sm text-gray-500 pt-2">
+                Sudah punya akun?
+                <a href="#" id="show-login-link" class="font-medium text-blue-600 hover:underline">Masuk di sini</a>
+            </p>
+        </div>
+    </div>
+
+
+    <!-- Halaman Beranda/Sambutan -->
+    <div id="home-page" class="page hidden w-full max-w-2xl">
+        <div class="bg-white shadow-xl rounded-2xl p-8 sm:p-12 space-y-8 border border-gray-200">
+            <div class="flex justify-between items-center">
+                <p id="home-welcome-user" class="text-xs text-blue-500 tracking-widest uppercase"></p>
+                 <button id="logout-button" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V5.414l7.293 7.293a1 1 0 001.414-1.414L5.414 4H15a1 1 0 100-2H4a1 1 0 00-1 1z" clip-rule="evenodd" /></svg>
+                    <span>Keluar</span>
+                </button>
+            </div>
+            <div class="text-center">
+                <h1 class="text-4xl sm:text-5xl font-bold text-gray-800">Jadwal Ekstrakurikuler</h1>
+                <div class="relative mt-6">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                         <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="text" id="home-search-input" class="w-full bg-gray-50 border border-gray-300 text-gray-800 rounded-full py-3 pl-12 pr-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" placeholder="Cari eskul, hari, atau tempat...">
+                </div>
+            </div>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 justify-center">
+                <button id="go-to-schedule-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    Jadwal Umum
+                </button>
+                 <button id="go-to-eskul-list-btn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    Daftar Eskul
+                </button>
+                <button id="go-to-my-eskul-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    Eskul Saya
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Halaman Daftar Eskul -->
+    <div id="eskul-list-page" class="page hidden w-full max-w-5xl">
+        <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-200">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-600">Daftar Ekstrakurikuler</h1>
+                <button id="back-to-home-from-list-btn" class="flex items-center space-x-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <span>Beranda</span>
+                </button>
+            </div>
+            <div id="eskul-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Kartu Eskul akan dirender di sini oleh JavaScript -->
+            </div>
+        </div>
+    </div>
+   
+    <!-- Halaman Eskul yang Diikuti -->
+    <div id="my-eskul-list-page" class="page hidden w-full max-w-5xl">
+        <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-200">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-green-600">Eskul yang Saya Ikuti</h1>
+                <button id="back-to-home-from-my-list-btn" class="flex items-center space-x-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <span>Beranda</span>
+                </button>
+            </div>
+            <div id="my-eskul-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Kartu Eskul yang diikuti akan dirender di sini -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Halaman Detail Eskul (Publik) -->
+    <div id="eskul-detail-page" class="page hidden w-full max-w-3xl">
+        <div class="bg-white shadow-xl rounded-2xl p-8 space-y-6 border border-gray-200">
+            <div class="flex justify-between items-start gap-4">
+                <div>
+                    <h1 id="detail-eskul-name" class="text-4xl font-bold text-blue-600"></h1>
+                    <p class="text-gray-500 mt-1">Detail Informasi Ekstrakurikuler</p>
+                </div>
+                <button id="back-to-list-btn" class="flex-shrink-0 flex items-center space-x-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <span>Kembali ke Daftar</span>
+                </button>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg space-y-4 border border-gray-200">
+                <div><h3 class="font-semibold text-gray-700">Deskripsi</h3><p id="detail-eskul-description" class="text-gray-600 whitespace-pre-wrap mt-1"></p></div>
+                <div><h3 class="font-semibold text-gray-700">Jadwal</h3><p id="detail-eskul-schedule" class="text-gray-600 mt-1"></p></div>
+                <div><h3 class="font-semibold text-gray-700">Tempat</h3><p id="detail-eskul-place" class="text-gray-600 mt-1"></p></div>
+            </div>
+             <div class="space-y-3"><h3 class="font-semibold text-gray-700 text-lg">Struktur Anggota</h3><div id="detail-eskul-members-container" class="bg-gray-50 border border-gray-200 p-4 rounded-lg space-y-2"></div></div>
+             <div class="space-y-3">
+                <button id="why-join-btn" class="w-full flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    <span id="why-join-btn-text">✨ Kenapa Harus Ikut Eskul Ini? (AI)</span>
+                    <div id="why-join-spinner" class="spinner spinner-white hidden"></div>
+                </button>
+                <div id="why-join-result" class="hidden bg-gray-100 p-4 rounded-lg text-gray-700 whitespace-pre-wrap border border-gray-200"></div>
+             </div>
+             <div class="flex justify-between items-center gap-3 pt-4 border-t">
+                <button id="join-eskul-btn" class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                    Daftar Eskul Ini
+                </button>
+                <div id="admin-actions-public" class="text-right flex justify-end gap-3">
+                    <button id="edit-eskul-members-btn" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">Edit Anggota</button>
+                    <button id="edit-eskul-detail-btn" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">Edit Informasi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Halaman Detail Eskul Eksklusif (Anggota) -->
+    <div id="my-eskul-detail-page" class="page hidden w-full max-w-3xl">
+        <div class="bg-white shadow-xl rounded-2xl p-8 space-y-6 border border-gray-200">
+            <div class="flex justify-between items-start gap-4">
+                <div><h1 id="my-detail-eskul-name" class="text-4xl font-bold text-green-600"></h1><p class="text-gray-500 mt-1">Informasi Internal Ekstrakurikuler</p></div>
+                <button id="back-to-my-list-btn" class="flex-shrink-0 flex items-center space-x-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <span>Kembali ke Eskul Saya</span>
+                </button>
+            </div>
+           
+            <!-- Info Eksklusif -->
+            <div id="exclusive-info-panel" class="bg-green-50 p-6 rounded-lg space-y-4 border border-green-200">
+                <h3 class="text-xl font-bold text-green-800">Informasi Internal</h3>
+                <div><h4 class="font-semibold text-gray-700">Pengumuman Internal</h4><p id="exclusive-announcement" class="text-gray-600 whitespace-pre-wrap mt-1"></p></div>
+                <div><h4 class="font-semibold text-gray-700">Keperluan Eskul</h4><p id="exclusive-needs" class="text-gray-600 whitespace-pre-wrap mt-1"></p></div>
+                <div><h4 class="font-semibold text-gray-700">Jumlah Kas</h4><p id="exclusive-cash" class="text-gray-600 mt-1"></p></div>
+            </div>
+           
+            <!-- Panel Edit Info Eksklusif (Untuk Admin/Pengurus) -->
+            <div id="exclusive-edit-panel" class="hidden bg-gray-100 p-6 rounded-lg space-y-4 border border-gray-200">
+                 <h3 class="text-xl font-bold text-gray-700">Panel Pengurus</h3>
+                 <input type="hidden" id="exclusive-eskul-id">
+                 <div>
+                    <label for="exclusive-announcement-input" class="block text-sm font-medium text-gray-600 mb-1">Edit Pengumuman Internal</label>
+                    <textarea id="exclusive-announcement-input" rows="3" class="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                 </div>
+                 <div>
+                    <label for="exclusive-needs-input" class="block text-sm font-medium text-gray-600 mb-1">Edit Keperluan Eskul</label>
+                    <textarea id="exclusive-needs-input" rows="3" class="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                 </div>
+                 <div>
+                    <label for="exclusive-cash-input" class="block text-sm font-medium text-gray-600 mb-1">Edit Jumlah Kas</label>
+                    <input type="text" id="exclusive-cash-input" class="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                 </div>
+                 <div class="text-right">
+                    <button id="save-exclusive-info-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">Simpan Informasi</button>
+                 </div>
+            </div>
+
+
+             <!-- Info Publik (tetap ditampilkan) -->
+            <div class="pt-4 border-t"><h3 class="font-semibold text-gray-700 text-lg">Struktur Anggota</h3><div id="my-detail-eskul-members-container" class="bg-gray-50 border border-gray-200 p-4 rounded-lg space-y-2 mt-2"></div></div>
+            <div class="text-right"><button id="leave-eskul-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">Keluar dari Eskul</button></div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Kontainer Halaman Jadwal -->
+    <div id="schedule-page" class="page hidden w-full max-w-5xl">
+        <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-200">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-blue-600">Jadwal Ekstrakurikuler Umum</h1>
+                    <p class="text-gray-500 mt-1" id="welcome-user"></p>
+                </div>
+                <button id="back-to-home-btn" class="flex items-center space-x-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    <span>Beranda</span>
+                </button>
+            </div>
+           
+            <div id="announcement-section" class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h2 class="text-lg font-semibold text-blue-700 mb-2">Pengumuman Sekolah</h2>
+                <p id="announcement-text" class="text-gray-600 whitespace-pre-wrap">Tidak ada pengumuman saat ini.</p>
+            </div>
+            <div id="admin-panel" class="hidden mb-6 p-4 bg-gray-100 rounded-lg space-y-4 border border-gray-200">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">Panel Admin</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="announcement-input" class="block text-sm font-medium text-gray-600 mb-2">Buat Pengumuman Sekolah</label>
+                            <textarea id="announcement-input" rows="3" class="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tulis pengumuman atau kata kunci..."></textarea>
+                            <div class="flex gap-2 mt-2">
+                                <button id="post-announcement-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">Pasang</button>
+                                <button id="generate-announcement-btn" class="w-full flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition">
+                                    <span id="gen-announce-btn-text">✨ Buat Otomatis (AI)</span>
+                                    <div id="gen-announce-spinner" class="spinner spinner-white hidden"></div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center">
+                             <button id="add-eskul-btn" class="w-full h-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                                Tambah Eskul Baru
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative mb-4"><div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg></div><input type="text" id="schedule-search-input" class="w-full bg-white border border-gray-300 text-gray-800 rounded-full py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" placeholder="Cari lagi..."></div>
+            <div class="overflow-x-auto rounded-lg border border-gray-200"><table class="min-w-full text-sm text-left text-gray-700"><thead class="bg-gray-100 text-xs text-gray-500 uppercase tracking-wider"><tr><th scope="col" class="px-6 py-3">Hari</th><th scope="col" class="px-6 py-3">Ekstrakurikuler</th><th scope="col" class="px-6 py-3">Waktu</th><th scope="col" class="px-6 py-3">Tempat</th><th id="action-header" scope="col" class="px-6 py-3 hidden">Aksi</th></tr></thead><tbody id="schedule-body" class="divide-y divide-gray-200"></tbody></table></div>
+        </div>
+    </div>
+   
+    <!-- Modal untuk Tambah/Edit Eskul -->
+    <div id="eskul-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4 transform scale-95">
+            <h2 id="modal-title" class="text-2xl font-bold text-blue-600">Tambah Eskul Baru</h2>
+            <form id="eskul-form"><input type="hidden" id="eskul-id"><div class="space-y-3"><div><label for="eskul-name" class="block text-sm font-medium text-gray-600 mb-1">Nama Eskul</label><input type="text" id="eskul-name" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div><div><label for="eskul-day" class="block text-sm font-medium text-gray-600 mb-1">Hari</label><input type="text" id="eskul-day" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div><div><label for="eskul-time" class="block text-sm font-medium text-gray-600 mb-1">Waktu</label><input type="text" id="eskul-time" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div><div><label for="eskul-place" class="block text-sm font-medium text-gray-600 mb-1">Tempat</label><input type="text" id="eskul-place" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div><div><div class="flex justify-between items-center mb-1"><label for="eskul-description" class="block text-sm font-medium text-gray-600">Deskripsi</label><button type="button" id="generate-description-btn" class="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-500"><span id="gen-desc-btn-text">✨ Buat Otomatis (AI)</span><div id="gen-desc-spinner" class="spinner hidden"></div></button></div><textarea id="eskul-description" rows="4" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></textarea></div></div><div class="flex justify-end gap-3 pt-4"><button type="button" id="cancel-eskul-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition">Batal</button><button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">Simpan</button></div></form>
+        </div>
+    </div>
+
+
+    <!-- Modal untuk Edit Anggota -->
+    <div id="members-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 space-y-4 transform scale-95">
+            <h2 id="members-modal-title" class="text-2xl font-bold text-blue-600">Edit Anggota Eskul</h2>
+            <input type="hidden" id="members-eskul-id">
+            <div id="current-members-list" class="max-h-60 overflow-y-auto space-y-2 pr-2"></div>
+            <form id="add-member-form" class="flex flex-col sm:flex-row gap-2 pt-4 border-t border-gray-200"><input type="text" id="member-name-input" placeholder="Nama Anggota" class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required><input type="text" id="member-role-input" placeholder="Jabatan (e.g. Ketua)" class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required><button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition whitespace-nowrap">Tambah</button></form>
+            <div class="flex justify-end pt-4"><button type="button" id="close-members-modal-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-5 rounded-lg transition">Selesai</button></div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Kotak dialog konfirmasi kustom -->
+    <div id="custom-confirm-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4 text-center transform scale-95">
+            <h3 id="confirm-title" class="text-lg font-semibold text-gray-800">Apakah Anda yakin?</h3>
+            <p id="confirm-text" class="text-gray-500">Tindakan ini tidak dapat diurungkan.</p>
+            <div class="flex justify-center gap-4 pt-4"><button id="confirm-cancel-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition">Batal</button><button id="confirm-ok-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">Hapus</button></div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- ELEMEN DOM ---
+            const pages = {
+                login: document.getElementById('login-page'),
+                signup: document.getElementById('signup-page'),
+                home: document.getElementById('home-page'),
+                schedule: document.getElementById('schedule-page'),
+                eskulList: document.getElementById('eskul-list-page'),
+                eskulDetail: document.getElementById('eskul-detail-page'),
+                myEskulList: document.getElementById('my-eskul-list-page'),
+                myEskulDetail: document.getElementById('my-eskul-detail-page'),
+            };
+
+
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const loginErrorMessage = document.getElementById('login-error-message');
+            const signupMessage = document.getElementById('signup-message');
+            const logoutButton = document.getElementById('logout-button');
+            const showSignupLink = document.getElementById('show-signup-link');
+            const showLoginLink = document.getElementById('show-login-link');
+            const welcomeUser = document.getElementById('welcome-user');
+            const homeWelcomeUser = document.getElementById('home-welcome-user');
+            const scheduleBody = document.getElementById('schedule-body');
+            const adminPanel = document.getElementById('admin-panel');
+            const actionHeader = document.getElementById('action-header');
+         
+            const homeSearchInput = document.getElementById('home-search-input');
+            const goToScheduleBtn = document.getElementById('go-to-schedule-btn');
+            const goToEskulListBtn = document.getElementById('go-to-eskul-list-btn');
+            const goToMyEskulBtn = document.getElementById('go-to-my-eskul-btn');
+
+
+            const scheduleSearchInput = document.getElementById('schedule-search-input');
+            const backToHomeBtn = document.getElementById('back-to-home-btn');
+
+
+            const eskulListContainer = document.getElementById('eskul-list-container');
+            const myEskulListContainer = document.getElementById('my-eskul-list-container');
+            const backToHomeFromListBtn = document.getElementById('back-to-home-from-list-btn');
+            const backToHomeFromMyListBtn = document.getElementById('back-to-home-from-my-list-btn');
+           
+            // Detail Publik
+            const detailEskulName = document.getElementById('detail-eskul-name');
+            const detailEskulDescription = document.getElementById('detail-eskul-description');
+            const detailEskulSchedule = document.getElementById('detail-eskul-schedule');
+            const detailEskulPlace = document.getElementById('detail-eskul-place');
+            const backToListBtn = document.getElementById('back-to-list-btn');
+            const editEskulDetailBtn = document.getElementById('edit-eskul-detail-btn');
+            const detailEskulMembersContainer = document.getElementById('detail-eskul-members-container');
+            const editEskulMembersBtn = document.getElementById('edit-eskul-members-btn');
+            const joinEskulBtn = document.getElementById('join-eskul-btn');
+           
+            // Detail Eksklusif
+            const myDetailEskulName = document.getElementById('my-detail-eskul-name');
+            const myDetailEskulMembersContainer = document.getElementById('my-detail-eskul-members-container');
+            const backToMyListBtn = document.getElementById('back-to-my-list-btn');
+            const exclusiveInfoPanel = document.getElementById('exclusive-info-panel');
+            const exclusiveEditPanel = document.getElementById('exclusive-edit-panel');
+            const exclusiveAnnouncement = document.getElementById('exclusive-announcement');
+            const exclusiveNeeds = document.getElementById('exclusive-needs');
+            const exclusiveCash = document.getElementById('exclusive-cash');
+            const exclusiveEskulIdInput = document.getElementById('exclusive-eskul-id');
+            const exclusiveAnnouncementInput = document.getElementById('exclusive-announcement-input');
+            const exclusiveNeedsInput = document.getElementById('exclusive-needs-input');
+            const exclusiveCashInput = document.getElementById('exclusive-cash-input');
+            const saveExclusiveInfoBtn = document.getElementById('save-exclusive-info-btn');
+            const leaveEskulBtn = document.getElementById('leave-eskul-btn');
+
+
+            const announcementText = document.getElementById('announcement-text');
+            const announcementInput = document.getElementById('announcement-input');
+            const postAnnouncementBtn = document.getElementById('post-announcement-btn');
+
+
+            const eskulModal = document.getElementById('eskul-modal');
+            const eskulForm = document.getElementById('eskul-form');
+            const modalTitle = document.getElementById('modal-title');
+            const addEskulBtn = document.getElementById('add-eskul-btn');
+            const cancelEskulBtn = document.getElementById('cancel-eskul-btn');
+            const eskulIdInput = document.getElementById('eskul-id');
+
+
+            const membersModal = document.getElementById('members-modal');
+            const membersModalTitle = document.getElementById('members-modal-title');
+            const membersEskulIdInput = document.getElementById('members-eskul-id');
+            const currentMembersList = document.getElementById('current-members-list');
+            const addMemberForm = document.getElementById('add-member-form');
+            const closeMembersModalBtn = document.getElementById('close-members-modal-btn');
+           
+            const confirmModal = document.getElementById('custom-confirm-modal');
+            const confirmText = document.getElementById('confirm-text');
+            const confirmOkBtn = document.getElementById('confirm-ok-btn');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            let confirmCallback = null;
+            let currentDetailPageId = null;
+
+
+            const generateDescriptionBtn = document.getElementById('generate-description-btn');
+            const genDescBtnText = document.getElementById('gen-desc-btn-text');
+            const genDescSpinner = document.getElementById('gen-desc-spinner');
+            const generateAnnouncementBtn = document.getElementById('generate-announcement-btn');
+            const genAnnounceBtnText = document.getElementById('gen-announce-btn-text');
+            const genAnnounceSpinner = document.getElementById('gen-announce-spinner');
+            const whyJoinBtn = document.getElementById('why-join-btn');
+            const whyJoinBtnText = document.getElementById('why-join-btn-text');
+            const whyJoinSpinner = document.getElementById('why-join-spinner');
+            const whyJoinResult = document.getElementById('why-join-result');
+
+
+            // --- FUNGSI LOCAL STORAGE ---
+            const getUsers = () => JSON.parse(localStorage.getItem('school_users_v3')) || [];
+            const saveUsers = (users) => localStorage.setItem('school_users_v3', JSON.stringify(users));
+            const getEskuls = () => JSON.parse(localStorage.getItem('school_eskuls_v3')) || [];
+            const saveEskuls = (eskuls) => localStorage.setItem('school_eskuls_v3', JSON.stringify(eskuls));
+            const getAnnouncement = () => localStorage.getItem('school_announcement_v3') || 'Tidak ada pengumuman saat ini.';
+            const saveAnnouncement = (text) => localStorage.setItem('school_announcement_v3', text);
+         
+            // --- INISIALISASI DATA ---
+            if (getUsers().length === 0) {
+                saveUsers([{ username: 'adminganteng123', password: '123456789' }]);
+            }
+            if (getEskuls().length === 0) {
+                const defaultEskuls = [
+                    { id: Date.now() + 1, name: 'Paskibra', day: 'Senin', time: '15:30 - 17:00', place: 'Lapangan Utama', description: 'Kegiatan baris-berbaris dan pengibaran bendera untuk melatih kedisiplinan dan cinta tanah air.', members: [{ name: 'Ahmad Budi', role: 'Ketua' }, { name: 'Citra Lestari', role: 'Wakil Ketua' }], exclusiveInfo: { needs: 'Sepatu PDH dan sarung tangan putih.', cash: 'Rp 150.000', announcement: 'Latihan tambahan hari Minggu untuk persiapan upacara.' } },
+                    { id: Date.now() + 2, name: 'Basket', day: 'Selasa', time: '16:00 - 17:30', place: 'Lapangan Basket', description: 'Latihan teknik dasar dan strategi permainan bola basket untuk meningkatkan kerja sama tim dan kebugaran.', members: [{ name: 'Doni Saputra', role: 'Kapten Tim' }], exclusiveInfo: { needs: 'Bola basket ukuran 7, minum.', cash: 'Rp 50.000', announcement: 'Friendly match melawan SMA tetangga hari Sabtu.' } },
+                    { id: Date.now() + 3, name: 'Pramuka', day: 'Rabu', time: '14:00 - 16:00', place: 'Lapangan Belakang', description: 'Kegiatan kepanduan yang mendidik kemandirian, keterampilan bertahan hidup, dan kepemimpinan.', members: [{ name: 'Eka Putri', role: 'Pratama' }, { name: 'Fajar Nugraha', role: 'Kerani' }], exclusiveInfo: { needs: 'Tali, tongkat, dan buku saku.', cash: 'Rp 200.000', announcement: 'Persiapan kemah akhir semester, data ulang.' } },
+                    { id: Date.now() + 4, name: 'Klub Coding', day: 'Rabu', time: '15:30 - 17:00', place: 'Lab Komputer', description: 'Belajar dasar-dasar pemrograman, logika, dan membuat proyek-proyek digital kreatif.', members: [], exclusiveInfo: { needs: 'Laptop pribadi jika ada.', cash: 'Rp 0', announcement: 'Project baru: membuat web profil sekolah.' } },
+                    { id: Date.now() + 5, name: 'Futsal', day: 'Kamis', time: '16:00 - 17:30', place: 'Lapangan Futsal', description: 'Mengasah kemampuan bermain futsal, fokus pada kecepatan, teknik, dan sportivitas.', members: [], exclusiveInfo: { needs: 'Sepatu futsal dan pelindung tulang kering.', cash: 'Rp 100.000', announcement: '' } },
+                    { id: Date.now() + 6, name: 'Rohis', day: 'Jumat', time: '13:00 - 14:30', place: 'Masjid Sekolah', description: 'Wadah pendalaman ilmu agama Islam, kajian, dan kegiatan sosial keagamaan.', members: [{ name: 'Hasan Abdullah', role: 'Ketua' }], exclusiveInfo: { needs: '', cash: 'Rp 300.000', announcement: 'Kajian Akbar bersama Ustadz X hari Jumat depan.' } },
+                    { id: Date.now() + 7, name: 'PMR', day: 'Sabtu', time: '09:00 - 11:00', place: 'Ruang UKS', description: 'Palang Merah Remaja, belajar tentang pertolongan pertama, kesehatan, dan kegiatan kemanusiaan.', members: [], exclusiveInfo: { needs: 'Buku catatan.', cash: 'Rp 25.000', announcement: 'Pelatihan bersama PMI kota hari Sabtu.' } },
+                ];
+                saveEskuls(defaultEskuls);
+            }
+
+
+            // --- GEMINI API HELPER ---
+            const callGeminiAPI = async (prompt, button, buttonTextElement, spinnerElement) => {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                button.disabled = true; spinnerElement.classList.remove('hidden'); if(buttonTextElement) buttonTextElement.classList.add('hidden');
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+                let responseText = "Gagal memuat data. Coba lagi nanti.";
+                try {
+                    let response, retries = 3, delay = 1000;
+                    for (let i = 0; i < retries; i++) {
+                        response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                        if (response.ok) break; if (response.status === 429 || response.status >= 500) { if (i < retries - 1) { await new Promise(resolve => setTimeout(resolve, delay)); delay *= 2; } } else break;
+                    }
+                    if (response && response.ok) { const result = await response.json(); const candidate = result.candidates?.[0]; if (candidate && candidate.content?.parts?.[0]?.text) responseText = candidate.content.parts[0].text; }
+                } catch (error) { console.error('Error calling Gemini API:', error); }
+                finally { button.disabled = false; spinnerElement.classList.add('hidden'); if(buttonTextElement) buttonTextElement.classList.remove('hidden'); }
+                return responseText;
+            };
+
+
+            // --- FUNGSI TAMPILAN & RENDER ---
+            const showPage = (pageKey) => { Object.values(pages).forEach(page => page.classList.add('hidden')); if (pages[pageKey]) pages[pageKey].classList.remove('hidden'); };
+            const openAnimatedModal = (modal) => { modal.classList.remove('hidden'); setTimeout(() => modal.querySelector('.transform').classList.remove('scale-95'), 10); };
+            const closeAnimatedModal = (modal) => { modal.querySelector('.transform').classList.add('scale-95'); setTimeout(() => modal.classList.add('hidden'), 300); };
+            const renderAnnouncement = () => { announcementText.innerText = getAnnouncement(); };
+
+
+            const renderEskulMembers = (container, members) => {
+                container.innerHTML = '';
+                if (!members || members.length === 0) { container.innerHTML = `<p class="text-gray-500">Belum ada anggota yang terdaftar.</p>`; return; }
+                members.forEach(member => { const memberDiv = document.createElement('div'); memberDiv.className = 'flex justify-between items-center'; memberDiv.innerHTML = `<span class="font-medium text-gray-700">${member.name}</span><span class="text-sm text-gray-500">${member.role}</span>`; container.appendChild(memberDiv); });
+            };
+
+
+            const renderEskulDetail = (eskulId) => {
+                const eskul = getEskuls().find(e => e.id == eskulId); if (!eskul) return;
+                currentDetailPageId = eskul.id;
+                detailEskulName.textContent = eskul.name; detailEskulDescription.textContent = eskul.description; detailEskulSchedule.textContent = `${eskul.day}, ${eskul.time}`; detailEskulPlace.textContent = eskul.place;
+                renderEskulMembers(detailEskulMembersContainer, eskul.members);
+                whyJoinResult.classList.add('hidden'); whyJoinResult.textContent = '';
+               
+                const currentUser = sessionStorage.getItem('currentUser'); const isAdmin = currentUser === 'adminganteng123';
+                const isMember = eskul.members.some(m => m.name === currentUser);
+                joinEskulBtn.disabled = isMember; joinEskulBtn.textContent = isMember ? 'Anda Sudah Terdaftar' : 'Daftar Eskul Ini';
+               
+                editEskulDetailBtn.classList.toggle('hidden', !isAdmin); editEskulMembersBtn.classList.toggle('hidden', !isAdmin);
+                showPage('eskulDetail');
+            };
+           
+            const renderMyEskulList = () => {
+                myEskulListContainer.innerHTML = '';
+                const currentUser = sessionStorage.getItem('currentUser');
+                const myEskuls = getEskuls().filter(e => e.members && e.members.some(m => m.name === currentUser));
+                if (myEskuls.length === 0) {
+                    myEskulListContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full py-10">Anda belum mengikuti eskul apapun. Silakan daftar melalui halaman 'Daftar Eskul'.</p>`;
+                }
+                myEskuls.forEach(eskul => {
+                    const card = document.createElement('div');
+                    card.className = 'my-eskul-card bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg hover:border-green-400 cursor-pointer transition duration-300';
+                    card.dataset.id = eskul.id;
+                    card.innerHTML = `<h3 class="text-xl font-bold text-green-600">${eskul.name}</h3><p class="text-gray-500 text-sm mt-1">${eskul.day}, ${eskul.time}</p>`;
+                    myEskulListContainer.appendChild(card);
+                });
+            };
+
+
+            const checkUserPermissions = (eskul, username) => {
+                if (username === 'adminganteng123') return true;
+                const member = eskul.members.find(m => m.name === username);
+                if (!member) return false;
+                const leaderRoles = ['ketua', 'wakil ketua', 'kapten tim', 'pratama', 'kerani'];
+                return leaderRoles.includes(member.role.toLowerCase());
+            };
+           
+            const renderMyEskulDetail = (eskulId) => {
+                const eskul = getEskuls().find(e => e.id == eskulId); if (!eskul) return;
+                currentDetailPageId = eskul.id;
+                myDetailEskulName.textContent = eskul.name;
+                renderEskulMembers(myDetailEskulMembersContainer, eskul.members);
+               
+                const info = eskul.exclusiveInfo || { needs: '', cash: '', announcement: '' };
+                exclusiveAnnouncement.textContent = info.announcement || 'Tidak ada pengumuman.';
+                exclusiveNeeds.textContent = info.needs || 'Tidak ada info.';
+                exclusiveCash.textContent = info.cash || 'Tidak ada info.';
+
+
+                const currentUser = sessionStorage.getItem('currentUser');
+                const hasPermission = checkUserPermissions(eskul, currentUser);
+                exclusiveEditPanel.classList.toggle('hidden', !hasPermission);
+               
+                if (hasPermission) {
+                    exclusiveEskulIdInput.value = eskul.id;
+                    exclusiveAnnouncementInput.value = info.announcement;
+                    exclusiveNeedsInput.value = info.needs;
+                    exclusiveCashInput.value = info.cash;
+                }
+               
+                showPage('myEskulDetail');
+            };
+
+
+            const renderSchedule = (currentUser, searchTerm = '') => {
+                scheduleBody.innerHTML = '';
+                const eskuls = getEskuls();
+                const isAdmin = currentUser === 'adminganteng123';
+                const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+                const dayOrder = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                eskuls.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
+                const filteredEskuls = eskuls.filter(item => item.name.toLowerCase().includes(normalizedSearchTerm) || item.day.toLowerCase().includes(normalizedSearchTerm) || item.place.toLowerCase().includes(normalizedSearchTerm));
+                actionHeader.classList.toggle('hidden', !isAdmin);
+                if (filteredEskuls.length === 0) {
+                    scheduleBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Jadwal tidak ditemukan.</td></tr>`;
+                    return;
+                }
+                filteredEskuls.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 transition duration-200';
+                    row.innerHTML = `<td class="px-6 py-4 font-medium">${item.day}</td><td class="px-6 py-4">${item.name}</td><td class="px-6 py-4">${item.time}</td><td class="px-6 py-4">${item.place}</td> ${isAdmin ? `<td class="px-6 py-4 text-right space-x-2 whitespace-nowrap"><button data-id="${item.id}" class="edit-btn text-blue-600 hover:text-blue-500 font-semibold">Edit</button><button data-id="${item.id}" class="delete-btn text-red-600 hover:text-red-500 font-semibold">Hapus</button></td>` : ''}`;
+                    scheduleBody.appendChild(row);
+                });
+            };
+
+
+            const renderEskulList = () => {
+                eskulListContainer.innerHTML = '';
+                getEskuls().forEach(eskul => {
+                    const card = document.createElement('div');
+                    card.className = 'eskul-card bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition duration-300';
+                    card.dataset.id = eskul.id;
+                    card.innerHTML = `<h3 class="text-xl font-bold text-blue-600">${eskul.name}</h3><p class="text-gray-500 text-sm mt-1">${eskul.day}, ${eskul.time}</p>`;
+                    eskulListContainer.appendChild(card);
+                });
+            };
+
+
+            const openEskulModal = (item = null) => {
+                eskulForm.reset();
+                if (item) {
+                    modalTitle.innerText = 'Edit Eskul';
+                    eskulIdInput.value = item.id;
+                    document.getElementById('eskul-day').value = item.day;
+                    document.getElementById('eskul-name').value = item.name;
+                    document.getElementById('eskul-time').value = item.time;
+                    document.getElementById('eskul-place').value = item.place;
+                    document.getElementById('eskul-description').value = item.description;
+                } else {
+                    modalTitle.innerText = 'Tambah Eskul Baru';
+                    eskulIdInput.value = '';
+                }
+                openAnimatedModal(eskulModal);
+            };
+
+
+            const showCustomConfirm = (message, callback) => {
+                confirmText.textContent = message;
+                confirmCallback = callback;
+                openAnimatedModal(confirmModal);
+            };
+
+
+            const renderMembersInModal = (eskulId) => {
+                const eskul = getEskuls().find(e => e.id == eskulId);
+                if (!eskul) return;
+                currentMembersList.innerHTML = '';
+                if (!eskul.members || eskul.members.length === 0) {
+                    currentMembersList.innerHTML = `<p class="text-gray-500 text-center p-4">Belum ada anggota.</p>`;
+                } else {
+                    eskul.members.forEach((member, index) => {
+                        const memberEl = document.createElement('div');
+                        memberEl.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+                        memberEl.innerHTML = `<div><p class="font-medium">${member.name}</p><p class="text-sm text-gray-500">${member.role}</p></div> <button data-index="${index}" data-name="${member.name}" class="delete-member-btn text-red-500 hover:text-red-700 p-1 rounded-full text-xl font-bold leading-none">&times;</button>`;
+                        currentMembersList.appendChild(memberEl);
+                    });
+                }
+                document.querySelectorAll('.delete-member-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const nameToDelete = btn.dataset.name;
+                        let eskuls = getEskuls();
+                        const eskulIndex = eskuls.findIndex(e => e.id == eskulId);
+                        if (eskulIndex > -1) {
+                            eskuls[eskulIndex].members = eskuls[eskulIndex].members.filter(m => m.name !== nameToDelete);
+                            saveEskuls(eskuls);
+                            renderMembersInModal(eskulId);
+                        }
+                    });
+                });
+            };
+
+
+            const openMembersModal = (eskulId) => {
+                const eskul = getEskuls().find(e => e.id == eskulId);
+                if (eskul) {
+                    membersEskulIdInput.value = eskulId;
+                    membersModalTitle.textContent = `Edit Anggota ${eskul.name}`;
+                    renderMembersInModal(eskulId);
+                    openAnimatedModal(membersModal);
+                }
+            };
+
+
+
+
+            // --- EVENT LISTENERS ---
+            showSignupLink.addEventListener('click', (e) => { e.preventDefault(); showPage('signup'); });
+            showLoginLink.addEventListener('click', (e) => { e.preventDefault(); showPage('login'); });
+            addEskulBtn.addEventListener('click', () => openEskulModal());
+            cancelEskulBtn.addEventListener('click', () => closeAnimatedModal(eskulModal));
+            editEskulMembersBtn.addEventListener('click', () => openMembersModal(currentDetailPageId));
+            closeMembersModalBtn.addEventListener('click', () => { closeAnimatedModal(membersModal); renderEskulDetail(membersEskulIdInput.value); });
+           
+            backToHomeBtn.addEventListener('click', () => showPage('home'));
+            backToHomeFromListBtn.addEventListener('click', () => showPage('home'));
+            backToHomeFromMyListBtn.addEventListener('click', () => showPage('home'));
+            backToListBtn.addEventListener('click', () => showPage('eskulList'));
+            backToMyListBtn.addEventListener('click', () => showPage('myEskulList'));
+           
+            goToScheduleBtn.addEventListener('click', () => { const searchTerm = homeSearchInput.value; scheduleSearchInput.value = searchTerm; renderSchedule(sessionStorage.getItem('currentUser'), searchTerm); showPage('schedule'); });
+            goToEskulListBtn.addEventListener('click', () => { renderEskulList(); showPage('eskulList'); });
+            goToMyEskulBtn.addEventListener('click', () => { renderMyEskulList(); showPage('myEskulList'); });
+           
+            eskulListContainer.addEventListener('click', (e) => { const card = e.target.closest('.eskul-card'); if (card) renderEskulDetail(card.dataset.id); });
+            myEskulListContainer.addEventListener('click', (e) => { const card = e.target.closest('.my-eskul-card'); if (card) renderMyEskulDetail(card.dataset.id); });
+           
+            editEskulDetailBtn.addEventListener('click', () => { if (currentDetailPageId) { const eskulToEdit = getEskuls().find(e => e.id == currentDetailPageId); openEskulModal(eskulToEdit); } });
+            confirmCancelBtn.addEventListener('click', () => closeAnimatedModal(confirmModal));
+            confirmOkBtn.addEventListener('click', () => { if(confirmCallback) confirmCallback(); closeAnimatedModal(confirmModal); });
+            scheduleSearchInput.addEventListener('input', () => renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value));
+            homeSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') goToScheduleBtn.click(); });
+           
+            generateDescriptionBtn.addEventListener('click', async () => { const eskulName = document.getElementById('eskul-name').value; if (!eskulName.trim()) { alert('Harap masukkan nama eskul terlebih dahulu.'); return; } const prompt = `Tuliskan deskripsi yang menarik dan singkat dalam satu paragraf untuk ekstrakurikuler sekolah bernama "${eskulName}". Deskripsi harus dalam Bahasa Indonesia dan cocok untuk diumumkan kepada siswa.`; document.getElementById('eskul-description').value = await callGeminiAPI(prompt, generateDescriptionBtn, genDescBtnText, genDescSpinner); });
+            generateAnnouncementBtn.addEventListener('click', async () => { const keywords = announcementInput.value; if (!keywords.trim()) { alert('Harap masukkan kata kunci untuk pengumuman.'); return; } const prompt = `Buat sebuah pengumuman sekolah formal dalam Bahasa Indonesia berdasarkan kata kunci berikut: "${keywords}". Pastikan bahasanya sopan, jelas, dan lengkap.`; announcementInput.value = await callGeminiAPI(prompt, generateAnnouncementBtn, genAnnounceBtnText, genAnnounceSpinner); });
+            whyJoinBtn.addEventListener('click', async () => { const eskulName = detailEskulName.textContent, eskulDesc = detailEskulDescription.textContent; const prompt = `Berikan alasan yang persuasif dalam 3 poin singkat mengapa seorang siswa harus bergabung dengan ekstrakurikuler "${eskulName}" yang memiliki deskripsi sebagai berikut: "${eskulDesc}". Jawaban harus dalam Bahasa Indonesia, gunakan format daftar bernomor.`; whyJoinResult.textContent = await callGeminiAPI(prompt, whyJoinBtn, whyJoinBtnText, whyJoinSpinner); whyJoinResult.classList.remove('hidden'); });
+           
+            // --- LOGIKA FORM & AKSI ---
+            signupForm.addEventListener('submit', function(e) { e.preventDefault(); const username = document.getElementById('signup-username').value.trim(); const password = document.getElementById('signup-password').value.trim(); signupMessage.textContent = ''; signupMessage.classList.remove('text-green-500', 'text-red-500'); if (password.length < 8) { signupMessage.textContent = 'Password harus minimal 8 karakter.'; signupMessage.classList.add('text-red-500'); return; } const users = getUsers(); if (users.some(user => user.username === username)) { signupMessage.textContent = 'Username sudah digunakan.'; signupMessage.classList.add('text-red-500'); } else { users.push({ username, password }); saveUsers(users); signupMessage.textContent = 'Pendaftaran berhasil! Silakan masuk.'; signupMessage.classList.add('text-green-500'); signupForm.reset(); setTimeout(() => { showPage('login'); signupMessage.textContent = ''; }, 2000); } });
+            loginForm.addEventListener('submit', function(e) { e.preventDefault(); const username = document.getElementById('login-username').value; const password = document.getElementById('login-password').value; const users = getUsers(); const validUser = users.find(user => user.username === username && user.password === password); if (validUser) { sessionStorage.setItem('currentUser', username); loginErrorMessage.classList.add('hidden'); loginForm.reset(); initializeApp(username); } else { loginErrorMessage.classList.remove('hidden'); } });
+            logoutButton.addEventListener('click', function() { sessionStorage.removeItem('currentUser'); adminPanel.classList.add('hidden'); homeSearchInput.value = ''; scheduleSearchInput.value = ''; showPage('login'); });
+            postAnnouncementBtn.addEventListener('click', () => { const text = announcementInput.value.trim(); if (text) { saveAnnouncement(text); renderAnnouncement(); announcementInput.value = ''; } });
+            eskulForm.addEventListener('submit', (e) => { e.preventDefault(); let eskuls = getEskuls(); const id = eskulIdInput.value; const eskulData = { day: document.getElementById('eskul-day').value, name: document.getElementById('eskul-name').value, time: document.getElementById('eskul-time').value, place: document.getElementById('eskul-place').value, description: document.getElementById('eskul-description').value, }; if (id) { const index = eskuls.findIndex(item => item.id == id); if (index !== -1) eskuls[index] = { ...eskuls[index], ...eskulData, id: parseInt(id) }; } else { eskulData.id = Date.now(); eskulData.members = []; eskulData.exclusiveInfo = { needs: '', cash: '', announcement: '' }; eskuls.push(eskulData); } saveEskuls(eskuls); renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value); if (!pages.eskulDetail.classList.contains('hidden') && id) renderEskulDetail(id); closeAnimatedModal(eskulModal); });
+            addMemberForm.addEventListener('submit', (e) => { e.preventDefault(); const eskulId = membersEskulIdInput.value; const nameInput = document.getElementById('member-name-input'); const roleInput = document.getElementById('member-role-input'); const name = nameInput.value.trim(); const role = roleInput.value.trim(); if (name && role) { let eskuls = getEskuls(); const eskulIndex = eskuls.findIndex(e => e.id == eskulId); if (eskulIndex > -1) { if (!eskuls[eskulIndex].members) eskuls[eskulIndex].members = []; if (eskuls[eskulIndex].members.some(m => m.name === name)) { alert('Nama anggota sudah ada di eskul ini.'); return; } eskuls[eskulIndex].members.push({ name, role }); saveEskuls(eskuls); renderMembersInModal(eskulId); addMemberForm.reset(); } } });
+            scheduleBody.addEventListener('click', (e) => { const target = e.target; if (target.classList.contains('delete-btn')) { const id = target.dataset.id; showCustomConfirm('Apakah Anda yakin ingin menghapus eskul ini?', () => { saveEskuls(getEskuls().filter(item => item.id != id)); renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value); }); } else if (target.classList.contains('edit-btn')) { const id = target.dataset.id; const itemToEdit = getEskuls().find(item => item.id == id); openEskulModal(itemToEdit); } });
+           
+            joinEskulBtn.addEventListener('click', () => {
+                const currentUser = sessionStorage.getItem('currentUser');
+                if (!currentUser || currentUser === 'adminganteng123') { alert('Hanya siswa yang bisa mendaftar eskul.'); return; }
+                let eskuls = getEskuls();
+                const eskulIndex = eskuls.findIndex(e => e.id == currentDetailPageId);
+                if (eskulIndex > -1) {
+                    if (!eskuls[eskulIndex].members.some(m => m.name === currentUser)) {
+                        eskuls[eskulIndex].members.push({ name: currentUser, role: 'Anggota' });
+                        saveEskuls(eskuls);
+                        renderEskulDetail(currentDetailPageId); // Re-render to update button state
+                        alert(`Anda berhasil terdaftar di eskul ${eskuls[eskulIndex].name}!`);
+                    }
+                }
+            });
+
+
+            leaveEskulBtn.addEventListener('click', () => {
+                const currentUser = sessionStorage.getItem('currentUser');
+                showCustomConfirm('Apakah Anda yakin ingin keluar dari eskul ini?', () => {
+                     let eskuls = getEskuls();
+                     const eskulIndex = eskuls.findIndex(e => e.id == currentDetailPageId);
+                     if (eskulIndex > -1) {
+                         eskuls[eskulIndex].members = eskuls[eskulIndex].members.filter(m => m.name !== currentUser);
+                         saveEskuls(eskuls);
+                         renderMyEskulList();
+                         showPage('myEskulList');
+                     }
+                });
+            });
+
+
+            saveExclusiveInfoBtn.addEventListener('click', () => {
+                const eskulId = exclusiveEskulIdInput.value;
+                let eskuls = getEskuls();
+                const eskulIndex = eskuls.findIndex(e => e.id == eskulId);
+                if (eskulIndex > -1) {
+                    eskuls[eskulIndex].exclusiveInfo = {
+                        announcement: exclusiveAnnouncementInput.value,
+                        needs: exclusiveNeedsInput.value,
+                        cash: exclusiveCashInput.value
+                    };
+                    saveEskuls(eskuls);
+                    renderMyEskulDetail(eskulId); // Re-render to show updated info
+                    alert('Informasi internal berhasil diperbarui!');
+                }
+            });
+           
+            // --- FUNGSI UTAMA APLIKASI ---
+            const initializeApp = (username) => {
+                const welcomeMessage = `Selamat datang, ${username}!`;
+                welcomeUser.innerText = welcomeMessage; homeWelcomeUser.innerText = welcomeMessage;
+                renderAnnouncement(); renderSchedule(username, '');
+                adminPanel.classList.toggle('hidden', username !== 'adminganteng123');
+                showPage('home');
+            };
+
+
+            // --- Cek Sesi Login ---
+            const loggedInUser = sessionStorage.getItem('currentUser');
+            if(loggedInUser) initializeApp(loggedInUser);
+            else showPage('login');
+        });
+    </script>
+</body>
+</html>
+
+
+
+
