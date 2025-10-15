@@ -421,10 +421,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- KONEKSI SUPABASE ---
             // GANTI DENGAN URL DAN KUNCI ANDA DARI SUPABASE
-            const SUPABASE_URL = https://ywfricfqbvrvkwtzbzny.supabase.co;
-            const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZnJpY2ZxYnZydmt3dHpiem55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MjY1MzUsImV4cCI6MjA3NjAwMjUzNX0.vOqT4WrLjHjVM-M3qbTdZy_V5ox6GniHnvgsicyLqcA;
+            const SUPABASE_URL = 'https://ywfricfqbvrvkwtzbzny.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZnJpY2ZxYnZydmt3dHpiem55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MjY1MzUsImV4cCI6MjA3NjAwMjUzNX0.vOqT4WrLjHjVM-M3qbTdZy_V5ox6GniHnvgsicyLqcA';
             // PENTING: Jangan lanjutkan jika URL atau Kunci belum diisi.
-            if (SUPABASE_URL === https://ywfricfqbvrvkwtzbzny.supabase.co || SUPABASE_ANON_KEY === eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZnJpY2ZxYnZydmt3dHpiem55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MjY1MzUsImV4cCI6MjA3NjAwMjUzNX0.vOqT4WrLjHjVM-M3qbTdZy_V5ox6GniHnvgsicyLqcA) {
+            if (SUPABASE_URL === 'https://your-project-url.supabase.co' || SUPABASE_ANON_KEY === 'your-anon-key') {
                 document.body.innerHTML = `<div class="text-center p-8 bg-red-100 text-red-800 rounded-lg max-w-lg mx-auto">
                     <h1 class="font-bold text-xl mb-2">Konfigurasi Database Belum Selesai</h1>
                     <p>Harap buka file <strong>index.html</strong>, cari bagian &lt;script&gt; di paling bawah, dan ganti placeholder <code>SUPABASE_URL</code> dan <code>SUPABASE_ANON_KEY</code> dengan kredensial dari proyek Supabase Anda.</p>
@@ -432,7 +432,8 @@
                 </div>`;
                 return;
             }
-            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Inisialisasi Supabase client dengan nama variabel yang benar
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // --- ELEMEN DOM ---
             const globalLoader = document.getElementById('global-loader');
@@ -448,10 +449,10 @@
             const hideLoader = () => globalLoader.classList.add('hidden');
 
             // --- FUNGSI FUNGSI DATA (SUPABASE) ---
-            const getUsers = async () => { const { data } = await supabase.from('users').select('*'); return data || []; };
-            const getEskuls = async () => { const { data } = await supabase.from('eskuls').select('*'); allEskuls = data || []; return allEskuls; };
-            const getAnnouncement = async () => { const { data } = await supabase.from('settings').select('value').eq('key', 'announcement').single(); return data ? data.value : 'Tidak ada pengumuman.'; };
-            const saveAnnouncement = async (text) => await supabase.from('settings').upsert({ key: 'announcement', value: text });
+            const getUsers = async () => { const { data } = await supabaseClient.from('users').select('*'); return data || []; };
+            const getEskuls = async () => { const { data } = await supabaseClient.from('eskuls').select('*'); allEskuls = data || []; return allEskuls; };
+            const getAnnouncement = async () => { const { data } = await supabaseClient.from('settings').select('value').eq('key', 'announcement').single(); return data ? data.value : 'Tidak ada pengumuman.'; };
+            const saveAnnouncement = async (text) => await supabaseClient.from('settings').upsert({ key: 'announcement', value: text });
             
             // --- GEMINI API HELPER (Tetap sama) ---
             const callGeminiAPI = async (prompt, button, buttonTextElement, spinnerElement) => { /* ... (kode tidak berubah) ... */ };
@@ -678,7 +679,7 @@
                     if (eskul) {
                         showLoader();
                         const updatedMembers = eskul.members.filter(m => m.name !== nameToDelete);
-                        await supabase.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
+                        await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
                         await getEskuls(); // Refresh data lokal
                         renderMembersInModal(eskulId);
                         hideLoader();
@@ -694,7 +695,7 @@
                 if (targetButton.classList.contains('delete-user-btn')) {
                     showCustomConfirm(`Apakah Anda yakin ingin menghapus pengguna "${username}"?`, async () => {
                         showLoader();
-                        await supabase.from('users').delete().eq('username', username);
+                        await supabaseClient.from('users').delete().eq('username', username);
                         await renderUserList();
                         hideLoader();
                     });
@@ -718,7 +719,7 @@
                 showLoader();
                 const username = document.getElementById('login-username').value; 
                 const password = document.getElementById('login-password').value; 
-                const { data, error } = await supabase.from('users').select('*').eq('username', username).eq('password', password).single();
+                const { data, error } = await supabaseClient.from('users').select('*').eq('username', username).eq('password', password).single();
                 if (data) { 
                     sessionStorage.setItem('currentUser', username); 
                     loginErrorMessage.classList.add('hidden'); 
@@ -755,11 +756,11 @@
                     description: document.getElementById('eskul-description').value, 
                 }; 
                 if (id) { 
-                    await supabase.from('eskuls').update(eskulData).eq('id', id);
+                    await supabaseClient.from('eskuls').update(eskulData).eq('id', id);
                 } else { 
                     eskulData.members = []; 
                     eskulData.exclusiveInfo = { needs: '', cash: '', announcement: '' }; 
-                    await supabase.from('eskuls').insert([eskulData]);
+                    await supabaseClient.from('eskuls').insert([eskulData]);
                 } 
                 await getEskuls();
                 renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value); 
@@ -781,7 +782,7 @@
                         if (eskul.members.some(m => m.name === name)) { alert('Nama anggota sudah ada di eskul ini.'); return; } 
                         showLoader();
                         const updatedMembers = [...eskul.members, { name, role }];
-                        await supabase.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
+                        await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
                         await getEskuls();
                         renderMembersInModal(eskulId); 
                         addMemberForm.reset(); 
@@ -796,7 +797,7 @@
                     const id = target.dataset.id; 
                     showCustomConfirm('Apakah Anda yakin ingin menghapus eskul ini?', async () => { 
                         showLoader();
-                        await supabase.from('eskuls').delete().eq('id', id);
+                        await supabaseClient.from('eskuls').delete().eq('id', id);
                         await getEskuls();
                         renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value); 
                         hideLoader();
@@ -819,12 +820,12 @@
                 
                 showLoader();
                 // Cek jika username sudah ada
-                const { data: existingUser } = await supabase.from('users').select('username').eq('username', username).single();
+                const { data: existingUser } = await supabaseClient.from('users').select('username').eq('username', username).single();
                 if (existingUser) {
                     addUserMessage.textContent = 'Username sudah digunakan.';
                     addUserMessage.classList.add('text-red-500');
                 } else {
-                    await supabase.from('users').insert([{ username, password }]);
+                    await supabaseClient.from('users').insert([{ username, password }]);
                     addUserMessage.textContent = `Pengguna "${username}" berhasil ditambahkan!`;
                     addUserMessage.classList.add('text-green-500');
                     addUserForm.reset();
@@ -842,7 +843,7 @@
                     if (!eskul.members.some(m => m.name === currentUser)) {
                         showLoader();
                         const updatedMembers = [...eskul.members, { name: currentUser, role: 'Anggota' }];
-                        await supabase.from('eskuls').update({ members: updatedMembers }).eq('id', eskul.id);
+                        await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskul.id);
                         await getEskuls();
                         renderEskulDetail(currentDetailPageId);
                         hideLoader();
@@ -858,7 +859,7 @@
                     const eskul = allEskuls.find(e => e.id == currentDetailPageId);
                     if(eskul) {
                         const updatedMembers = eskul.members.filter(m => m.name !== currentUser);
-                        await supabase.from('eskuls').update({ members: updatedMembers }).eq('id', eskul.id);
+                        await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskul.id);
                         await getEskuls();
                         renderMyEskulList();
                         showPage('myEskulList');
@@ -877,14 +878,13 @@
                         needs: exclusiveNeedsInput.value,
                         cash: exclusiveCashInput.value
                     };
-                    await supabase.from('eskuls').update({ exclusiveInfo: updatedInfo }).eq('id', eskulId);
+                    await supabaseClient.from('eskuls').update({ exclusiveInfo: updatedInfo }).eq('id', eskulId);
                     await getEskuls();
                     renderMyEskulDetail(eskulId);
                     hideLoader();
-                    alert('Informasi internal berhasil diperbarui!');
                 }
             });
-            
+
             changePasswordForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 changePasswordMessage.textContent = ''; changePasswordMessage.classList.remove('text-green-500', 'text-red-500');
@@ -896,14 +896,14 @@
                 if (newPassword !== confirmPassword) { changePasswordMessage.textContent = 'Konfirmasi password baru tidak cocok.'; changePasswordMessage.classList.add('text-red-500'); return; }
 
                 showLoader();
-                const { data: user } = await supabase.from('users').select('*').eq('username', currentUser).eq('password', currentPassword).single();
+                const { data: user } = await supabaseClient.from('users').select('*').eq('username', currentUser).eq('password', currentPassword).single();
                 if (!user) {
                     changePasswordMessage.textContent = 'Password saat ini salah.';
                     changePasswordMessage.classList.add('text-red-500');
                     hideLoader();
                     return;
                 }
-                await supabase.from('users').update({ password: newPassword }).eq('username', currentUser);
+                await supabaseClient.from('users').update({ password: newPassword }).eq('username', currentUser);
                 changePasswordMessage.textContent = 'Password berhasil diubah!';
                 changePasswordMessage.classList.add('text-green-500');
                 hideLoader();
@@ -918,7 +918,7 @@
                 if (newPassword.length < 6) { adminChangePasswordMessage.textContent = 'Password baru harus minimal 6 karakter.'; adminChangePasswordMessage.classList.add('text-red-500'); return; }
                 
                 showLoader();
-                const { error } = await supabase.from('users').update({ password: newPassword }).eq('username', usernameToChange);
+                const { error } = await supabaseClient.from('users').update({ password: newPassword }).eq('username', usernameToChange);
                 if (!error) {
                     adminChangePasswordMessage.textContent = 'Password berhasil diubah!';
                     adminChangePasswordMessage.classList.add('text-green-500');
