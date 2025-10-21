@@ -122,7 +122,7 @@
                  <button id="go-to-eskul-list-btn" class="group bg-gray-50 hover:bg-gray-100 p-6 rounded-xl text-left transition duration-300">
                      <div class="bg-gray-200 text-gray-700 rounded-lg p-2 w-min mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v15H6.5A2.5 2.5 0 0 1 4 14.5V4A2 2 0 0 1 6 2z"></path></svg></div>
                      <h3 class="font-bold text-lg text-gray-800">Daftar Eskul</h3>
-                     <p class="text-sm text-gray-500">Jelajahi semua eskul.</p>
+                     <p class="text-sm text-gray-500">Jelajahi & kelola eskul.</p>
                  </button>
                 <button id="go-to-my-eskul-btn" class="group bg-green-50 hover:bg-green-100 p-6 rounded-xl text-left transition duration-300">
                     <div class="bg-green-200 text-green-700 rounded-lg p-2 w-min mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
@@ -130,19 +130,40 @@
                     <p class="text-sm text-gray-500">Lihat eskul yang Anda ikuti.</p>
                 </button>
             </div>
+            
+            <!-- Panel Admin di Beranda -->
+            <div id="admin-home-panel" class="hidden mt-8 pt-6 border-t border-gray-200">
+                <h3 class="text-xl font-bold text-gray-700 mb-4">Panel Admin</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <button id="go-to-admin-users-btn" class="group bg-indigo-50 hover:bg-indigo-100 p-6 rounded-xl text-left transition duration-300">
+                        <div class="bg-indigo-200 text-indigo-700 rounded-lg p-2 w-min mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                        <h3 class="font-bold text-lg text-gray-800">Kelola Akun</h3>
+                        <p class="text-sm text-gray-500">Tambah atau hapus akun pengguna.</p>
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
     
-    <!-- ... Sisa elemen HTML (semua halaman dan modal) tidak berubah ... -->
     <!-- Halaman Daftar Eskul -->
     <div id="eskul-list-page" class="page hidden max-w-6xl">
         <div class="bg-white shadow-2xl rounded-2xl p-8 border border-gray-100">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800">Daftar Ekstrakurikuler</h1>
-                <button id="back-to-home-from-list-btn" class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                    <span>Beranda</span>
-                </button>
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Daftar Ekstrakurikuler</h1>
+                    <p class="text-gray-500 mt-1">Jelajahi semua eskul yang tersedia di sekolah.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="add-eskul-btn" class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center justify-center gap-2 transition-transform transform hover:scale-105 duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Tambah Eskul</span>
+                    </button>
+                    <button id="back-to-home-from-list-btn" class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                        <span>Beranda</span>
+                    </button>
+                </div>
             </div>
             <div id="eskul-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Kartu Eskul akan dirender di sini oleh JavaScript -->
@@ -196,9 +217,8 @@
                 <div class="space-y-6">
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                         <h3 class="font-bold text-gray-800 mb-3">Detail Jadwal</h3>
-                        <div class="space-y-2 text-sm">
-                            <p class="flex items-center gap-2 text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span id="detail-eskul-schedule"></span></p>
-                            <p class="flex items-center gap-2 text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span id="detail-eskul-place"></span></p>
+                        <div id="detail-eskul-schedule-container" class="space-y-2 text-sm">
+                            <!-- Jadwal akan dirender di sini -->
                         </div>
                     </div>
                     <div class="space-y-3"><h3 class="font-bold text-gray-800">Struktur Anggota</h3><div id="detail-eskul-members-container" class="bg-gray-50 border border-gray-200 p-4 rounded-lg space-y-2 text-sm"></div></div>
@@ -297,14 +317,10 @@
                             </button>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 gap-4">
-                         <button id="add-eskul-btn" class="w-full h-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-transform transform hover:scale-105 duration-300">
+                    <div>
+                         <button id="add-schedule-btn" class="w-full h-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-transform transform hover:scale-105 duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            <span>Tambah Eskul Baru</span>
-                        </button>
-                         <button id="manage-users-btn" class="w-full h-full bg-blue-600 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-transform transform hover:scale-105 duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>Kelola Akun</span>
+                            <span>Tambah Jadwal Baru</span>
                         </button>
                     </div>
                 </div>
@@ -319,9 +335,9 @@
         <div class="bg-white shadow-2xl rounded-2xl p-8 border border-gray-100">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-800">Kelola Akun Pengguna</h1>
-                <button id="back-to-schedule-from-users-btn" class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
+                <button id="back-to-home-from-users-btn" class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                    <span>Kembali ke Jadwal</span>
+                    <span>Beranda</span>
                 </button>
             </div>
 
@@ -353,19 +369,67 @@
     <!-- Modal untuk Tambah/Edit Eskul -->
     <div id="eskul-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden modal-backdrop">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 space-y-4 transform scale-95 opacity-0">
-            <h2 id="modal-title" class="text-2xl font-bold text-gray-800">Tambah Eskul Baru</h2>
-            <form id="eskul-form"><input type="hidden" id="eskul-id"><div class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label for="eskul-name" class="block text-sm font-medium text-gray-600 mb-1">Nama Eskul</label><input type="text" id="eskul-name" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div>
-                    <div><label for="eskul-day" class="block text-sm font-medium text-gray-600 mb-1">Hari</label><input type="text" id="eskul-day" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div>
+            <h2 id="eskul-modal-title" class="text-2xl font-bold text-gray-800">Tambah Eskul Baru</h2>
+            <form id="eskul-form">
+                <input type="hidden" id="eskul-id">
+                <div class="space-y-4">
+                    <div>
+                        <label for="eskul-name" class="block text-sm font-medium text-gray-600 mb-1">Nama Eskul</label>
+                        <input type="text" id="eskul-name" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="eskul-description" class="block text-sm font-medium text-gray-600">Deskripsi</label>
+                            <button type="button" id="generate-description-btn" class="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-500 font-semibold">
+                                <span id="gen-desc-btn-text">✨ Buat Otomatis (AI)</span>
+                                <div id="gen-desc-spinner" class="spinner hidden"></div>
+                            </button>
+                        </div>
+                        <textarea id="eskul-description" rows="4" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></textarea>
+                    </div>
                 </div>
-                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label for="eskul-time" class="block text-sm font-medium text-gray-600 mb-1">Waktu</label><input type="text" id="eskul-time" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div>
-                    <div><label for="eskul-place" class="block text-sm font-medium text-gray-600 mb-1">Tempat</label><input type="text" id="eskul-place" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" id="cancel-eskul-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition">Batal</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">Simpan</button>
                 </div>
-                <div><div class="flex justify-between items-center mb-1"><label for="eskul-description" class="block text-sm font-medium text-gray-600">Deskripsi</label><button type="button" id="generate-description-btn" class="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-500 font-semibold"><span id="gen-desc-btn-text">✨ Buat Otomatis (AI)</span><div id="gen-desc-spinner" class="spinner hidden"></div></button></div><textarea id="eskul-description" rows="4" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></textarea></div></div><div class="flex justify-end gap-3 pt-4"><button type="button" id="cancel-eskul-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition">Batal</button><button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">Simpan</button></div></form>
+            </form>
         </div>
     </div>
+
+    <!-- Modal untuk Tambah/Edit Jadwal -->
+    <div id="schedule-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 space-y-4 transform scale-95 opacity-0">
+            <h2 id="schedule-modal-title" class="text-2xl font-bold text-gray-800">Tambah Jadwal Baru</h2>
+            <form id="schedule-form">
+                <input type="hidden" id="schedule-id">
+                <div class="space-y-4">
+                     <div>
+                        <label for="schedule-eskul-select" class="block text-sm font-medium text-gray-600 mb-1">Pilih Eskul</label>
+                        <select id="schedule-eskul-select" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required></select>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="schedule-day" class="block text-sm font-medium text-gray-600 mb-1">Hari</label>
+                            <input type="text" id="schedule-day" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        </div>
+                        <div>
+                            <label for="schedule-time" class="block text-sm font-medium text-gray-600 mb-1">Waktu</label>
+                            <input type="text" id="schedule-time" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="schedule-place" class="block text-sm font-medium text-gray-600 mb-1">Tempat</label>
+                        <input type="text" id="schedule-place" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" id="cancel-schedule-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition">Batal</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">Simpan Jadwal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Modal untuk Edit Anggota -->
     <div id="members-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden modal-backdrop">
@@ -420,29 +484,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- KONEKSI SUPABASE ---
-            // GANTI DENGAN URL DAN KUNCI ANDA DARI SUPABASE
             const SUPABASE_URL = 'https://ywfricfqbvrvkwtzbzny.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZnJpY2ZxYnZydmt3dHpiem55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MjY1MzUsImV4cCI6MjA3NjAwMjUzNX0.vOqT4WrLjHjVM-M3qbTdZy_V5ox6GniHnvgsicyLqcA';
-            // PENTING: Jangan lanjutkan jika URL atau Kunci belum diisi.
             if (SUPABASE_URL === 'https://your-project-url.supabase.co' || SUPABASE_ANON_KEY === 'your-anon-key') {
-                document.body.innerHTML = `<div class="text-center p-8 bg-red-100 text-red-800 rounded-lg max-w-lg mx-auto">
-                    <h1 class="font-bold text-xl mb-2">Konfigurasi Database Belum Selesai</h1>
-                    <p>Harap buka file <strong>index.html</strong>, cari bagian &lt;script&gt; di paling bawah, dan ganti placeholder <code>SUPABASE_URL</code> dan <code>SUPABASE_ANON_KEY</code> dengan kredensial dari proyek Supabase Anda.</p>
-                    <p class="mt-4">Ikuti panduan di file <strong>panduan_supabase.md</strong> untuk mendapatkan kredensial tersebut.</p>
-                </div>`;
+                document.body.innerHTML = `<div class="text-center p-8 bg-red-100 text-red-800 rounded-lg max-w-lg mx-auto"><h1 class="font-bold text-xl mb-2">Konfigurasi Database Belum Selesai</h1><p>Harap buka file <strong>index.html</strong>, cari bagian &lt;script&gt; di paling bawah, dan ganti placeholder <code>SUPABASE_URL</code> dan <code>SUPABASE_ANON_KEY</code> dengan kredensial dari proyek Supabase Anda.</p></div>`;
                 return;
             }
-            // Inisialisasi Supabase client dengan nama variabel yang benar
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // --- ELEMEN DOM ---
             const globalLoader = document.getElementById('global-loader');
-            // ... (semua elemen DOM lainnya tetap sama)
             const pages = { login: document.getElementById('login-page'), home: document.getElementById('home-page'), schedule: document.getElementById('schedule-page'), eskulList: document.getElementById('eskul-list-page'), eskulDetail: document.getElementById('eskul-detail-page'), myEskulList: document.getElementById('my-eskul-list-page'), myEskulDetail: document.getElementById('my-eskul-detail-page'), adminUser: document.getElementById('admin-user-page'), };
-            const loginForm = document.getElementById('login-form'); const loginErrorMessage = document.getElementById('login-error-message'); const logoutButton = document.getElementById('logout-button'); const welcomeUser = document.getElementById('welcome-user'); const homeWelcomeUser = document.getElementById('home-welcome-user'); const scheduleBody = document.getElementById('schedule-body'); const adminPanel = document.getElementById('admin-panel'); const actionHeader = document.getElementById('action-header'); const homeSearchInput = document.getElementById('home-search-input'); const goToScheduleBtn = document.getElementById('go-to-schedule-btn'); const goToEskulListBtn = document.getElementById('go-to-eskul-list-btn'); const goToMyEskulBtn = document.getElementById('go-to-my-eskul-btn'); const scheduleSearchInput = document.getElementById('schedule-search-input'); const backToHomeBtn = document.getElementById('back-to-home-btn'); const eskulListContainer = document.getElementById('eskul-list-container'); const myEskulListContainer = document.getElementById('my-eskul-list-container'); const backToHomeFromListBtn = document.getElementById('back-to-home-from-list-btn'); const backToHomeFromMyListBtn = document.getElementById('back-to-home-from-my-list-btn'); const detailEskulName = document.getElementById('detail-eskul-name'); const detailEskulDescription = document.getElementById('detail-eskul-description'); const detailEskulSchedule = document.getElementById('detail-eskul-schedule'); const detailEskulPlace = document.getElementById('detail-eskul-place'); const backToListBtn = document.getElementById('back-to-list-btn'); const editEskulDetailBtn = document.getElementById('edit-eskul-detail-btn'); const detailEskulMembersContainer = document.getElementById('detail-eskul-members-container'); const editEskulMembersBtn = document.getElementById('edit-eskul-members-btn'); const joinEskulBtn = document.getElementById('join-eskul-btn'); const myDetailEskulName = document.getElementById('my-detail-eskul-name'); const myDetailEskulMembersContainer = document.getElementById('my-detail-eskul-members-container'); const backToMyListBtn = document.getElementById('back-to-my-list-btn'); const exclusiveInfoPanel = document.getElementById('exclusive-info-panel'); const exclusiveEditPanel = document.getElementById('exclusive-edit-panel'); const exclusiveAnnouncement = document.getElementById('exclusive-announcement'); const exclusiveNeeds = document.getElementById('exclusive-needs'); const exclusiveCash = document.getElementById('exclusive-cash'); const exclusiveEskulIdInput = document.getElementById('exclusive-eskul-id'); const exclusiveAnnouncementInput = document.getElementById('exclusive-announcement-input'); const exclusiveNeedsInput = document.getElementById('exclusive-needs-input'); const exclusiveCashInput = document.getElementById('exclusive-cash-input'); const saveExclusiveInfoBtn = document.getElementById('save-exclusive-info-btn'); const leaveEskulBtn = document.getElementById('leave-eskul-btn'); const announcementText = document.getElementById('announcement-text'); const announcementInput = document.getElementById('announcement-input'); const postAnnouncementBtn = document.getElementById('post-announcement-btn'); const eskulModal = document.getElementById('eskul-modal'); const eskulForm = document.getElementById('eskul-form'); const modalTitle = document.getElementById('modal-title'); const addEskulBtn = document.getElementById('add-eskul-btn'); const cancelEskulBtn = document.getElementById('cancel-eskul-btn'); const eskulIdInput = document.getElementById('eskul-id'); const membersModal = document.getElementById('members-modal'); const membersModalTitle = document.getElementById('members-modal-title'); const membersEskulIdInput = document.getElementById('members-eskul-id'); const currentMembersList = document.getElementById('current-members-list'); const addMemberForm = document.getElementById('add-member-form'); const closeMembersModalBtn = document.getElementById('close-members-modal-btn'); const confirmModal = document.getElementById('custom-confirm-modal'); const confirmText = document.getElementById('confirm-text'); const confirmOkBtn = document.getElementById('confirm-ok-btn'); const confirmCancelBtn = document.getElementById('confirm-cancel-btn'); let confirmCallback = null; let currentDetailPageId = null; const generateDescriptionBtn = document.getElementById('generate-description-btn'); const genDescBtnText = document.getElementById('gen-desc-btn-text'); const genDescSpinner = document.getElementById('gen-desc-spinner'); const generateAnnouncementBtn = document.getElementById('generate-announcement-btn'); const genAnnounceBtnText = document.getElementById('gen-announce-btn-text'); const genAnnounceSpinner = document.getElementById('gen-announce-spinner'); const whyJoinBtn = document.getElementById('why-join-btn'); const whyJoinBtnText = document.getElementById('why-join-btn-text'); const whyJoinSpinner = document.getElementById('why-join-spinner'); const whyJoinResult = document.getElementById('why-join-result'); const manageUsersBtn = document.getElementById('manage-users-btn'); const backToScheduleFromUsersBtn = document.getElementById('back-to-schedule-from-users-btn'); const addUserForm = document.getElementById('add-user-form'); const addUserMessage = document.getElementById('add-user-message'); const userListContainer = document.getElementById('user-list-container'); const changePasswordBtn = document.getElementById('change-password-btn'); const changePasswordModal = document.getElementById('change-password-modal'); const changePasswordForm = document.getElementById('change-password-form'); const cancelChangePasswordBtn = document.getElementById('cancel-change-password-btn'); const changePasswordMessage = document.getElementById('change-password-message'); const adminChangePasswordModal = document.getElementById('admin-change-password-modal'); const adminChangePasswordForm = document.getElementById('admin-change-password-form'); const adminCancelChangePasswordBtn = document.getElementById('admin-cancel-change-password-btn'); const adminChangePasswordUsername = document.getElementById('admin-change-password-username'); const adminChangePasswordUserHidden = document.getElementById('admin-change-password-user-hidden'); const adminChangePasswordMessage = document.getElementById('admin-change-password-message');
+            const loginForm = document.getElementById('login-form'); const loginErrorMessage = document.getElementById('login-error-message'); const logoutButton = document.getElementById('logout-button'); const welcomeUser = document.getElementById('welcome-user'); const homeWelcomeUser = document.getElementById('home-welcome-user'); const scheduleBody = document.getElementById('schedule-body'); const adminPanel = document.getElementById('admin-panel'); const actionHeader = document.getElementById('action-header'); const homeSearchInput = document.getElementById('home-search-input'); const goToScheduleBtn = document.getElementById('go-to-schedule-btn'); const goToEskulListBtn = document.getElementById('go-to-eskul-list-btn'); const goToMyEskulBtn = document.getElementById('go-to-my-eskul-btn'); const scheduleSearchInput = document.getElementById('schedule-search-input'); const backToHomeBtn = document.getElementById('back-to-home-btn'); const eskulListContainer = document.getElementById('eskul-list-container'); const myEskulListContainer = document.getElementById('my-eskul-list-container'); const backToHomeFromListBtn = document.getElementById('back-to-home-from-list-btn'); const backToHomeFromMyListBtn = document.getElementById('back-to-home-from-my-list-btn'); const detailEskulName = document.getElementById('detail-eskul-name'); const detailEskulDescription = document.getElementById('detail-eskul-description'); const detailEskulScheduleContainer = document.getElementById('detail-eskul-schedule-container'); const backToListBtn = document.getElementById('back-to-list-btn'); const editEskulDetailBtn = document.getElementById('edit-eskul-detail-btn'); const detailEskulMembersContainer = document.getElementById('detail-eskul-members-container'); const editEskulMembersBtn = document.getElementById('edit-eskul-members-btn'); const joinEskulBtn = document.getElementById('join-eskul-btn'); const myDetailEskulName = document.getElementById('my-detail-eskul-name'); const myDetailEskulMembersContainer = document.getElementById('my-detail-eskul-members-container'); const backToMyListBtn = document.getElementById('back-to-my-list-btn'); const exclusiveInfoPanel = document.getElementById('exclusive-info-panel'); const exclusiveEditPanel = document.getElementById('exclusive-edit-panel'); const exclusiveAnnouncement = document.getElementById('exclusive-announcement'); const exclusiveNeeds = document.getElementById('exclusive-needs'); const exclusiveCash = document.getElementById('exclusive-cash'); const exclusiveEskulIdInput = document.getElementById('exclusive-eskul-id'); const exclusiveAnnouncementInput = document.getElementById('exclusive-announcement-input'); const exclusiveNeedsInput = document.getElementById('exclusive-needs-input'); const exclusiveCashInput = document.getElementById('exclusive-cash-input'); const saveExclusiveInfoBtn = document.getElementById('save-exclusive-info-btn'); const leaveEskulBtn = document.getElementById('leave-eskul-btn'); const announcementText = document.getElementById('announcement-text'); const announcementInput = document.getElementById('announcement-input'); const postAnnouncementBtn = document.getElementById('post-announcement-btn'); const membersModal = document.getElementById('members-modal'); const membersModalTitle = document.getElementById('members-modal-title'); const membersEskulIdInput = document.getElementById('members-eskul-id'); const currentMembersList = document.getElementById('current-members-list'); const addMemberForm = document.getElementById('add-member-form'); const closeMembersModalBtn = document.getElementById('close-members-modal-btn'); const confirmModal = document.getElementById('custom-confirm-modal'); const confirmText = document.getElementById('confirm-text'); const confirmOkBtn = document.getElementById('confirm-ok-btn'); const confirmCancelBtn = document.getElementById('confirm-cancel-btn'); let confirmCallback = null; let currentDetailPageId = null; const generateDescriptionBtn = document.getElementById('generate-description-btn'); const genDescBtnText = document.getElementById('gen-desc-btn-text'); const genDescSpinner = document.getElementById('gen-desc-spinner'); const generateAnnouncementBtn = document.getElementById('generate-announcement-btn'); const genAnnounceBtnText = document.getElementById('gen-announce-btn-text'); const genAnnounceSpinner = document.getElementById('gen-announce-spinner'); const whyJoinBtn = document.getElementById('why-join-btn'); const whyJoinBtnText = document.getElementById('why-join-btn-text'); const whyJoinSpinner = document.getElementById('why-join-spinner'); const whyJoinResult = document.getElementById('why-join-result'); const adminHomePanel = document.getElementById('admin-home-panel'); const goToAdminUsersBtn = document.getElementById('go-to-admin-users-btn'); const backToHomeFromUsersBtn = document.getElementById('back-to-home-from-users-btn'); const addUserForm = document.getElementById('add-user-form'); const addUserMessage = document.getElementById('add-user-message'); const userListContainer = document.getElementById('user-list-container'); const changePasswordBtn = document.getElementById('change-password-btn'); const changePasswordModal = document.getElementById('change-password-modal'); const changePasswordForm = document.getElementById('change-password-form'); const cancelChangePasswordBtn = document.getElementById('cancel-change-password-btn'); const changePasswordMessage = document.getElementById('change-password-message'); const adminChangePasswordModal = document.getElementById('admin-change-password-modal'); const adminChangePasswordForm = document.getElementById('admin-change-password-form'); const adminCancelChangePasswordBtn = document.getElementById('admin-cancel-change-password-btn'); const adminChangePasswordUsername = document.getElementById('admin-change-password-username'); const adminChangePasswordUserHidden = document.getElementById('admin-change-password-user-hidden'); const adminChangePasswordMessage = document.getElementById('admin-change-password-message');
+            // Elemen Modal Eskul
+            const eskulModal = document.getElementById('eskul-modal'); const eskulModalTitle = document.getElementById('eskul-modal-title'); const eskulForm = document.getElementById('eskul-form'); const addEskulBtn = document.getElementById('add-eskul-btn'); const cancelEskulBtn = document.getElementById('cancel-eskul-btn'); const eskulIdInput = document.getElementById('eskul-id');
+            // Elemen Modal Jadwal
+            const scheduleModal = document.getElementById('schedule-modal'); const scheduleModalTitle = document.getElementById('schedule-modal-title'); const scheduleForm = document.getElementById('schedule-form'); const addScheduleBtn = document.getElementById('add-schedule-btn'); const cancelScheduleBtn = document.getElementById('cancel-schedule-btn'); const scheduleIdInput = document.getElementById('schedule-id'); const scheduleEskulSelect = document.getElementById('schedule-eskul-select');
             
             // --- VARIABEL GLOBAL ---
-            let allEskuls = []; // Cache untuk data eskul
+            let allEskuls = [];
+            let allSchedules = [];
 
             // --- FUNGSI LOADING ---
             const showLoader = () => globalLoader.classList.remove('hidden');
@@ -451,6 +512,7 @@
             // --- FUNGSI FUNGSI DATA (SUPABASE) ---
             const getUsers = async () => { const { data } = await supabaseClient.from('users').select('*'); return data || []; };
             const getEskuls = async () => { const { data } = await supabaseClient.from('eskuls').select('*'); allEskuls = data || []; return allEskuls; };
+            const getSchedules = async () => { const { data } = await supabaseClient.from('schedules').select('*'); allSchedules = data || []; return allSchedules; };
             const getAnnouncement = async () => { const { data } = await supabaseClient.from('settings').select('value').eq('key', 'announcement').single(); return data ? data.value : 'Tidak ada pengumuman.'; };
             const saveAnnouncement = async (text) => await supabaseClient.from('settings').upsert({ key: 'announcement', value: text });
             
@@ -473,7 +535,22 @@
             const renderEskulDetail = (eskulId) => {
                 const eskul = allEskuls.find(e => e.id == eskulId); if (!eskul) return;
                 currentDetailPageId = eskul.id;
-                detailEskulName.textContent = eskul.name; detailEskulDescription.textContent = eskul.description; detailEskulSchedule.textContent = `${eskul.day}, ${eskul.time}`; detailEskulPlace.textContent = eskul.place;
+                detailEskulName.textContent = eskul.name; detailEskulDescription.textContent = eskul.description;
+                
+                // Menampilkan jadwal untuk eskul ini
+                const schedulesForEskul = allSchedules.filter(s => s.eskul_id === eskul.id);
+                detailEskulScheduleContainer.innerHTML = '';
+                if (schedulesForEskul.length > 0) {
+                    schedulesForEskul.forEach(s => {
+                        detailEskulScheduleContainer.innerHTML += `
+                            <p class="flex items-center gap-2 text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>${s.day}, ${s.time}</span></p>
+                            <p class="flex items-center gap-2 text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>${s.place}</span></p>
+                        `;
+                    });
+                } else {
+                    detailEskulScheduleContainer.innerHTML = `<p class="text-gray-500">Belum ada jadwal.</p>`;
+                }
+                
                 renderEskulMembers(detailEskulMembersContainer, eskul.members);
                 whyJoinResult.classList.add('hidden'); whyJoinResult.textContent = '';
                
@@ -496,7 +573,8 @@
                     const card = document.createElement('div');
                     card.className = 'my-eskul-card group bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg hover:border-green-400 cursor-pointer transition duration-300';
                     card.dataset.id = eskul.id;
-                    card.innerHTML = `<h3 class="text-xl font-bold text-green-700 group-hover:text-green-600 transition">${eskul.name}</h3><p class="text-gray-500 text-sm mt-1">${eskul.day}, ${eskul.time}</p>`;
+                    const scheduleInfo = allSchedules.find(s => s.eskul_id === eskul.id);
+                    card.innerHTML = `<h3 class="text-xl font-bold text-green-700 group-hover:text-green-600 transition">${eskul.name}</h3><p class="text-gray-500 text-sm mt-1">${scheduleInfo ? `${scheduleInfo.day}, ${scheduleInfo.time}` : 'Jadwal belum diatur'}</p>`;
                     myEskulListContainer.appendChild(card);
                 });
             };
@@ -538,18 +616,30 @@
                 scheduleBody.innerHTML = '';
                 const isAdmin = currentUser === 'adminganteng123';
                 const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+                
+                const joinedData = allSchedules.map(schedule => {
+                    const eskul = allEskuls.find(e => e.id === schedule.eskul_id);
+                    return eskul ? { ...schedule, eskulName: eskul.name } : null;
+                }).filter(Boolean); // Hapus jadwal jika eskulnya tidak ditemukan
+
                 const dayOrder = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                const sortedEskuls = [...allEskuls].sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
-                const filteredEskuls = sortedEskuls.filter(item => item.name.toLowerCase().includes(normalizedSearchTerm) || item.day.toLowerCase().includes(normalizedSearchTerm) || item.place.toLowerCase().includes(normalizedSearchTerm));
+                const sortedSchedules = joinedData.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
+                
+                const filteredSchedules = sortedSchedules.filter(item => 
+                    item.eskulName.toLowerCase().includes(normalizedSearchTerm) || 
+                    item.day.toLowerCase().includes(normalizedSearchTerm) || 
+                    item.place.toLowerCase().includes(normalizedSearchTerm)
+                );
+                
                 actionHeader.classList.toggle('hidden', !isAdmin);
-                if (filteredEskuls.length === 0) {
+                if (filteredSchedules.length === 0) {
                     scheduleBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Jadwal tidak ditemukan.</td></tr>`;
                     return;
                 }
-                filteredEskuls.forEach(item => {
+                filteredSchedules.forEach(item => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50 transition duration-200';
-                    row.innerHTML = `<td class="px-6 py-4 font-medium text-gray-800">${item.day}</td><td class="px-6 py-4 font-semibold">${item.name}</td><td class="px-6 py-4">${item.time}</td><td class="px-6 py-4">${item.place}</td> ${isAdmin ? `<td class="px-6 py-4 text-right space-x-4 whitespace-nowrap"><button data-id="${item.id}" class="edit-btn text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button data-id="${item.id}" class="delete-btn text-red-600 hover:text-red-800 font-semibold">Hapus</button></td>` : ''}`;
+                    row.innerHTML = `<td class="px-6 py-4 font-medium text-gray-800">${item.day}</td><td class="px-6 py-4 font-semibold">${item.eskulName}</td><td class="px-6 py-4">${item.time}</td><td class="px-6 py-4">${item.place}</td> ${isAdmin ? `<td class="px-6 py-4 text-right space-x-4 whitespace-nowrap"><button data-id="${item.id}" class="edit-schedule-btn text-blue-600 hover:text-blue-800 font-semibold">Edit</button><button data-id="${item.id}" class="delete-schedule-btn text-red-600 hover:red-800 font-semibold">Hapus</button></td>` : ''}`;
                     scheduleBody.appendChild(row);
                 });
             };
@@ -560,26 +650,52 @@
                     const card = document.createElement('div');
                     card.className = 'eskul-card group bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition duration-300';
                     card.dataset.id = eskul.id;
-                    card.innerHTML = `<h3 class="text-xl font-bold text-blue-700 group-hover:text-blue-600 transition">${eskul.name}</h3><p class="text-gray-500 text-sm mt-1">${eskul.day}, ${eskul.time}</p>`;
+                    const scheduleInfo = allSchedules.find(s => s.eskul_id === eskul.id);
+                    card.innerHTML = `
+                        <h3 class="text-xl font-bold text-blue-700 group-hover:text-blue-600 transition">${eskul.name}</h3>
+                        <p class="text-gray-500 text-sm mt-1">${scheduleInfo ? `${scheduleInfo.day}, ${scheduleInfo.time}` : 'Jadwal belum diatur'}</p>
+                    `;
                     eskulListContainer.appendChild(card);
                 });
             };
 
-            const openEskulModal = (item = null) => {
+            const openEskulModal = (eskul = null) => {
                 eskulForm.reset();
-                if (item) {
-                    modalTitle.innerText = 'Edit Eskul';
-                    eskulIdInput.value = item.id;
-                    document.getElementById('eskul-day').value = item.day;
-                    document.getElementById('eskul-name').value = item.name;
-                    document.getElementById('eskul-time').value = item.time;
-                    document.getElementById('eskul-place').value = item.place;
-                    document.getElementById('eskul-description').value = item.description;
+                if (eskul) {
+                    eskulModalTitle.innerText = 'Edit Eskul';
+                    eskulIdInput.value = eskul.id;
+                    document.getElementById('eskul-name').value = eskul.name;
+                    document.getElementById('eskul-description').value = eskul.description;
                 } else {
-                    modalTitle.innerText = 'Tambah Eskul Baru';
+                    eskulModalTitle.innerText = 'Tambah Eskul Baru';
                     eskulIdInput.value = '';
                 }
                 openAnimatedModal(eskulModal);
+            };
+
+            const openScheduleModal = (schedule = null) => {
+                scheduleForm.reset();
+                // Populate select dropdown
+                scheduleEskulSelect.innerHTML = '<option value="">-- Pilih Ekstrakurikuler --</option>';
+                allEskuls.forEach(eskul => {
+                    const option = document.createElement('option');
+                    option.value = eskul.id;
+                    option.textContent = eskul.name;
+                    scheduleEskulSelect.appendChild(option);
+                });
+
+                if (schedule) {
+                    scheduleModalTitle.innerText = 'Edit Jadwal';
+                    scheduleIdInput.value = schedule.id;
+                    scheduleEskulSelect.value = schedule.eskul_id;
+                    document.getElementById('schedule-day').value = schedule.day;
+                    document.getElementById('schedule-time').value = schedule.time;
+                    document.getElementById('schedule-place').value = schedule.place;
+                } else {
+                    scheduleModalTitle.innerText = 'Tambah Jadwal Baru';
+                    scheduleIdInput.value = '';
+                }
+                openAnimatedModal(scheduleModal);
             };
 
             const showCustomConfirm = (message, callback) => {
@@ -589,13 +705,12 @@
             };
 
             const renderMembersInModal = (eskulId) => {
-                const eskul = allEskuls.find(e => e.id == eskulId);
-                if (!eskul) return;
+                const eskul = allEskuls.find(e => e.id == eskulId); if (!eskul) return;
                 currentMembersList.innerHTML = '';
                 if (!eskul.members || eskul.members.length === 0) {
                     currentMembersList.innerHTML = `<p class="text-gray-500 text-center p-4">Belum ada anggota.</p>`;
                 } else {
-                    eskul.members.forEach((member, index) => {
+                    eskul.members.forEach((member) => {
                         const memberEl = document.createElement('div');
                         memberEl.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
                         memberEl.innerHTML = `<div><p class="font-medium">${member.name}</p><p class="text-sm text-gray-500">${member.role}</p></div> <button data-name="${member.name}" class="delete-member-btn text-red-500 hover:text-red-700 p-1 rounded-full text-xl font-bold leading-none">&times;</button>`;
@@ -639,6 +754,8 @@
             };
 
             // --- EVENT LISTENERS (dengan async/await) ---
+            addScheduleBtn.addEventListener('click', () => openScheduleModal());
+            cancelScheduleBtn.addEventListener('click', () => closeAnimatedModal(scheduleModal));
             addEskulBtn.addEventListener('click', () => openEskulModal());
             cancelEskulBtn.addEventListener('click', () => closeAnimatedModal(eskulModal));
             closeMembersModalBtn.addEventListener('click', async () => { closeAnimatedModal(membersModal); await getEskuls(); renderEskulDetail(membersEskulIdInput.value); });
@@ -646,12 +763,12 @@
             backToHomeBtn.addEventListener('click', () => showPage('home'));
             backToHomeFromListBtn.addEventListener('click', () => showPage('home'));
             backToHomeFromMyListBtn.addEventListener('click', () => showPage('home'));
-            backToListBtn.addEventListener('click', () => showPage('eskulList'));
+            backToListBtn.addEventListener('click', () => { renderEskulList(); showPage('eskulList'); });
             backToMyListBtn.addEventListener('click', () => showPage('myEskulList'));
            
             goToScheduleBtn.addEventListener('click', () => { const searchTerm = homeSearchInput.value; scheduleSearchInput.value = searchTerm; renderSchedule(sessionStorage.getItem('currentUser'), searchTerm); showPage('schedule'); });
-            goToEskulListBtn.addEventListener('click', () => { renderEskulList(); showPage('eskulList'); });
-            goToMyEskulBtn.addEventListener('click', () => { renderMyEskulList(); showPage('myEskulList'); });
+            goToEskulListBtn.addEventListener('click', async () => { showLoader(); await getSchedules(); renderEskulList(); hideLoader(); showPage('eskulList'); });
+            goToMyEskulBtn.addEventListener('click', async () => { showLoader(); await getSchedules(); renderMyEskulList(); hideLoader(); showPage('myEskulList'); });
            
             eskulListContainer.addEventListener('click', (e) => { const card = e.target.closest('.eskul-card'); if (card) renderEskulDetail(card.dataset.id); });
             myEskulListContainer.addEventListener('click', (e) => { const card = e.target.closest('.my-eskul-card'); if (card) renderMyEskulDetail(card.dataset.id); });
@@ -668,8 +785,8 @@
             generateAnnouncementBtn.addEventListener('click', async () => { /* ... (kode tidak berubah) ... */ });
             whyJoinBtn.addEventListener('click', async () => { /* ... (kode tidak berubah) ... */ });
            
-            manageUsersBtn.addEventListener('click', async () => { showLoader(); await renderUserList(); hideLoader(); showPage('adminUser'); });
-            backToScheduleFromUsersBtn.addEventListener('click', () => showPage('schedule'));
+            goToAdminUsersBtn.addEventListener('click', async () => { showLoader(); await renderUserList(); hideLoader(); showPage('adminUser'); });
+            backToHomeFromUsersBtn.addEventListener('click', () => showPage('home'));
             
             currentMembersList.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('delete-member-btn')) {
@@ -680,17 +797,14 @@
                         showLoader();
                         const updatedMembers = eskul.members.filter(m => m.name !== nameToDelete);
                         await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
-                        await getEskuls(); // Refresh data lokal
-                        renderMembersInModal(eskulId);
+                        await getEskuls(); renderMembersInModal(eskulId);
                         hideLoader();
                     }
                 }
             });
 
             userListContainer.addEventListener('click', (e) => {
-                const targetButton = e.target.closest('button');
-                if (!targetButton) return;
-                
+                const targetButton = e.target.closest('button'); if (!targetButton) return;
                 const username = targetButton.dataset.username;
                 if (targetButton.classList.contains('delete-user-btn')) {
                     showCustomConfirm(`Apakah Anda yakin ingin menghapus pengguna "${username}"?`, async () => {
@@ -700,10 +814,7 @@
                         hideLoader();
                     });
                 } else if (targetButton.classList.contains('change-user-password-btn')) {
-                    adminChangePasswordUsername.textContent = username;
-                    adminChangePasswordUserHidden.value = username;
-                    adminChangePasswordForm.reset();
-                    adminChangePasswordMessage.textContent = '';
+                    adminChangePasswordUsername.textContent = username; adminChangePasswordUserHidden.value = username; adminChangePasswordForm.reset(); adminChangePasswordMessage.textContent = '';
                     openAnimatedModal(adminChangePasswordModal);
                 }
             });
@@ -714,68 +825,48 @@
 
 
             // --- LOGIKA FORM & AKSI (dengan async/await) ---
-            loginForm.addEventListener('submit', async function(e) { 
-                e.preventDefault(); 
-                showLoader();
-                const username = document.getElementById('login-username').value; 
-                const password = document.getElementById('login-password').value; 
-                const { data, error } = await supabaseClient.from('users').select('*').eq('username', username).eq('password', password).single();
-                if (data) { 
-                    sessionStorage.setItem('currentUser', username); 
-                    loginErrorMessage.classList.add('hidden'); 
-                    loginForm.reset(); 
-                    await initializeApp(username); 
-                } else { 
-                    loginErrorMessage.classList.remove('hidden'); 
-                }
-                hideLoader();
-            });
+            loginForm.addEventListener('submit', async function(e) { e.preventDefault(); showLoader(); const username = document.getElementById('login-username').value; const password = document.getElementById('login-password').value; const { data } = await supabaseClient.from('users').select('*').eq('username', username).eq('password', password).single(); if (data) { sessionStorage.setItem('currentUser', username); loginErrorMessage.classList.add('hidden'); loginForm.reset(); await initializeApp(username); } else { loginErrorMessage.classList.remove('hidden'); } hideLoader(); });
+            logoutButton.addEventListener('click', function() { sessionStorage.removeItem('currentUser'); adminPanel.classList.add('hidden'); adminHomePanel.classList.add('hidden'); homeSearchInput.value = ''; scheduleSearchInput.value = ''; showPage('login'); });
+            postAnnouncementBtn.addEventListener('click', async () => { const text = announcementInput.value.trim(); if (text) { showLoader(); await saveAnnouncement(text); await renderAnnouncement(); announcementInput.value = ''; hideLoader(); } });
 
-            logoutButton.addEventListener('click', function() { sessionStorage.removeItem('currentUser'); adminPanel.classList.add('hidden'); homeSearchInput.value = ''; scheduleSearchInput.value = ''; showPage('login'); });
-            
-            postAnnouncementBtn.addEventListener('click', async () => { 
-                const text = announcementInput.value.trim(); 
-                if (text) { 
-                    showLoader();
-                    await saveAnnouncement(text); 
-                    await renderAnnouncement(); 
-                    announcementInput.value = ''; 
-                    hideLoader();
-                } 
-            });
-
-            eskulForm.addEventListener('submit', async (e) => { 
-                e.preventDefault(); 
-                showLoader();
-                const id = eskulIdInput.value; 
-                const eskulData = { 
-                    day: document.getElementById('eskul-day').value, 
-                    name: document.getElementById('eskul-name').value, 
-                    time: document.getElementById('eskul-time').value, 
-                    place: document.getElementById('eskul-place').value, 
-                    description: document.getElementById('eskul-description').value, 
-                }; 
-                if (id) { 
+            eskulForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); showLoader();
+                const id = eskulIdInput.value;
+                const eskulData = { name: document.getElementById('eskul-name').value, description: document.getElementById('eskul-description').value, };
+                if (id) {
                     await supabaseClient.from('eskuls').update(eskulData).eq('id', id);
-                } else { 
-                    eskulData.members = []; 
-                    eskulData.exclusiveInfo = { needs: '', cash: '', announcement: '' }; 
+                } else {
+                    eskulData.members = []; eskulData.exclusiveInfo = { needs: '', cash: '', announcement: '' };
                     await supabaseClient.from('eskuls').insert([eskulData]);
-                } 
-                await getEskuls();
-                renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value); 
-                if (!pages.eskulDetail.classList.contains('hidden') && id) renderEskulDetail(id); 
-                hideLoader();
-                closeAnimatedModal(eskulModal); 
+                }
+                await getEskuls(); renderEskulList();
+                if (!pages.eskulDetail.classList.contains('hidden') && id) renderEskulDetail(id);
+                hideLoader(); closeAnimatedModal(eskulModal);
+            });
+
+            scheduleForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); showLoader();
+                const id = scheduleIdInput.value;
+                const scheduleData = {
+                    eskul_id: document.getElementById('schedule-eskul-select').value,
+                    day: document.getElementById('schedule-day').value,
+                    time: document.getElementById('schedule-time').value,
+                    place: document.getElementById('schedule-place').value,
+                };
+                if (id) {
+                    await supabaseClient.from('schedules').update(scheduleData).eq('id', id);
+                } else {
+                    await supabaseClient.from('schedules').insert([scheduleData]);
+                }
+                await getSchedules();
+                renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value);
+                hideLoader(); closeAnimatedModal(scheduleModal);
             });
 
             addMemberForm.addEventListener('submit', async (e) => { 
                 e.preventDefault(); 
-                const eskulId = membersEskulIdInput.value; 
-                const nameInput = document.getElementById('member-name-input'); 
-                const roleInput = document.getElementById('member-role-input'); 
-                const name = nameInput.value.trim(); 
-                const role = roleInput.value.trim(); 
+                const eskulId = membersEskulIdInput.value; const nameInput = document.getElementById('member-name-input'); const roleInput = document.getElementById('member-role-input'); 
+                const name = nameInput.value.trim(); const role = roleInput.value.trim(); 
                 if (name && role) { 
                     const eskul = allEskuls.find(e => e.id == eskulId);
                     if (eskul) {
@@ -784,8 +875,7 @@
                         const updatedMembers = [...eskul.members, { name, role }];
                         await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
                         await getEskuls();
-                        renderMembersInModal(eskulId); 
-                        addMemberForm.reset(); 
+                        renderMembersInModal(eskulId); addMemberForm.reset(); 
                         hideLoader();
                     }
                 } 
@@ -793,43 +883,36 @@
             
             scheduleBody.addEventListener('click', (e) => { 
                 const target = e.target; 
-                if (target.classList.contains('delete-btn')) { 
+                if (target.classList.contains('delete-schedule-btn')) { 
                     const id = target.dataset.id; 
-                    showCustomConfirm('Apakah Anda yakin ingin menghapus eskul ini?', async () => { 
+                    showCustomConfirm('Apakah Anda yakin ingin menghapus jadwal ini?', async () => { 
                         showLoader();
-                        await supabaseClient.from('eskuls').delete().eq('id', id);
-                        await getEskuls();
+                        await supabaseClient.from('schedules').delete().eq('id', id);
+                        await getSchedules();
                         renderSchedule(sessionStorage.getItem('currentUser'), scheduleSearchInput.value); 
                         hideLoader();
                     }); 
-                } else if (target.classList.contains('edit-btn')) { 
+                } else if (target.classList.contains('edit-schedule-btn')) { 
                     const id = target.dataset.id; 
-                    const itemToEdit = allEskuls.find(item => item.id == id); 
-                    openEskulModal(itemToEdit); 
+                    const scheduleToEdit = allSchedules.find(item => item.id == id); 
+                    openScheduleModal(scheduleToEdit); 
                 } 
             });
            
             addUserForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                addUserMessage.textContent = '';
-                addUserMessage.classList.remove('text-green-500', 'text-red-500');
-                const username = document.getElementById('new-username').value.trim();
-                const password = document.getElementById('new-password').value.trim();
+                e.preventDefault(); addUserMessage.textContent = ''; addUserMessage.classList.remove('text-green-500', 'text-red-500');
+                const username = document.getElementById('new-username').value.trim(); const password = document.getElementById('new-password').value.trim();
                 if (!username || !password) { addUserMessage.textContent = 'Username dan password tidak boleh kosong.'; addUserMessage.classList.add('text-red-500'); return; }
                 if (password.length < 6) { addUserMessage.textContent = 'Password harus minimal 6 karakter.'; addUserMessage.classList.add('text-red-500'); return; }
                 
                 showLoader();
-                // Cek jika username sudah ada
                 const { data: existingUser } = await supabaseClient.from('users').select('username').eq('username', username).single();
                 if (existingUser) {
-                    addUserMessage.textContent = 'Username sudah digunakan.';
-                    addUserMessage.classList.add('text-red-500');
+                    addUserMessage.textContent = 'Username sudah digunakan.'; addUserMessage.classList.add('text-red-500');
                 } else {
                     await supabaseClient.from('users').insert([{ username, password }]);
-                    addUserMessage.textContent = `Pengguna "${username}" berhasil ditambahkan!`;
-                    addUserMessage.classList.add('text-green-500');
-                    addUserForm.reset();
-                    await renderUserList();
+                    addUserMessage.textContent = `Pengguna "${username}" berhasil ditambahkan!`; addUserMessage.classList.add('text-green-500');
+                    addUserForm.reset(); await renderUserList();
                     setTimeout(() => { addUserMessage.textContent = ''; }, 3000);
                 }
                 hideLoader();
@@ -860,9 +943,7 @@
                     if(eskul) {
                         const updatedMembers = eskul.members.filter(m => m.name !== currentUser);
                         await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskul.id);
-                        await getEskuls();
-                        renderMyEskulList();
-                        showPage('myEskulList');
+                        await getEskuls(); renderMyEskulList(); showPage('myEskulList');
                     }
                     hideLoader();
                 });
@@ -873,21 +954,15 @@
                 const eskul = allEskuls.find(e => e.id == eskulId);
                 if(eskul) {
                     showLoader();
-                    const updatedInfo = {
-                        announcement: exclusiveAnnouncementInput.value,
-                        needs: exclusiveNeedsInput.value,
-                        cash: exclusiveCashInput.value
-                    };
+                    const updatedInfo = { announcement: exclusiveAnnouncementInput.value, needs: exclusiveNeedsInput.value, cash: exclusiveCashInput.value };
                     await supabaseClient.from('eskuls').update({ exclusiveInfo: updatedInfo }).eq('id', eskulId);
-                    await getEskuls();
-                    renderMyEskulDetail(eskulId);
+                    await getEskuls(); renderMyEskulDetail(eskulId);
                     hideLoader();
                 }
             });
 
             changePasswordForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                changePasswordMessage.textContent = ''; changePasswordMessage.classList.remove('text-green-500', 'text-red-500');
+                e.preventDefault(); changePasswordMessage.textContent = ''; changePasswordMessage.classList.remove('text-green-500', 'text-red-500');
                 const currentUser = sessionStorage.getItem('currentUser');
                 const currentPassword = document.getElementById('current-password').value;
                 const newPassword = document.getElementById('new-user-password').value;
@@ -897,22 +972,14 @@
 
                 showLoader();
                 const { data: user } = await supabaseClient.from('users').select('*').eq('username', currentUser).eq('password', currentPassword).single();
-                if (!user) {
-                    changePasswordMessage.textContent = 'Password saat ini salah.';
-                    changePasswordMessage.classList.add('text-red-500');
-                    hideLoader();
-                    return;
-                }
+                if (!user) { changePasswordMessage.textContent = 'Password saat ini salah.'; changePasswordMessage.classList.add('text-red-500'); hideLoader(); return; }
                 await supabaseClient.from('users').update({ password: newPassword }).eq('username', currentUser);
-                changePasswordMessage.textContent = 'Password berhasil diubah!';
-                changePasswordMessage.classList.add('text-green-500');
-                hideLoader();
+                changePasswordMessage.textContent = 'Password berhasil diubah!'; changePasswordMessage.classList.add('text-green-500'); hideLoader();
                 setTimeout(() => closeAnimatedModal(changePasswordModal), 1500);
             });
 
             adminChangePasswordForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                adminChangePasswordMessage.textContent = ''; adminChangePasswordMessage.classList.remove('text-green-500', 'text-red-500');
+                e.preventDefault(); adminChangePasswordMessage.textContent = ''; adminChangePasswordMessage.classList.remove('text-green-500', 'text-red-500');
                 const usernameToChange = adminChangePasswordUserHidden.value;
                 const newPassword = document.getElementById('admin-new-password').value;
                 if (newPassword.length < 6) { adminChangePasswordMessage.textContent = 'Password baru harus minimal 6 karakter.'; adminChangePasswordMessage.classList.add('text-red-500'); return; }
@@ -920,12 +987,10 @@
                 showLoader();
                 const { error } = await supabaseClient.from('users').update({ password: newPassword }).eq('username', usernameToChange);
                 if (!error) {
-                    adminChangePasswordMessage.textContent = 'Password berhasil diubah!';
-                    adminChangePasswordMessage.classList.add('text-green-500');
+                    adminChangePasswordMessage.textContent = 'Password berhasil diubah!'; adminChangePasswordMessage.classList.add('text-green-500');
                     setTimeout(() => closeAnimatedModal(adminChangePasswordModal), 1500);
                 } else {
-                     adminChangePasswordMessage.textContent = 'Pengguna tidak ditemukan.';
-                    adminChangePasswordMessage.classList.add('text-red-500');
+                     adminChangePasswordMessage.textContent = 'Pengguna tidak ditemukan.'; adminChangePasswordMessage.classList.add('text-red-500');
                 }
                 hideLoader();
             });
@@ -936,8 +1001,12 @@
                 welcomeUser.innerText = `Masuk sebagai ${username}`; homeWelcomeUser.innerText = username;
                 await renderAnnouncement();
                 await getEskuls();
+                await getSchedules();
                 renderSchedule(username, '');
-                adminPanel.classList.toggle('hidden', username !== 'adminganteng123');
+                const isAdmin = username === 'adminganteng123';
+                adminPanel.classList.toggle('hidden', !isAdmin);
+                adminHomePanel.classList.toggle('hidden', !isAdmin);
+                addEskulBtn.classList.toggle('hidden', !isAdmin);
                 hideLoader();
                 showPage('home');
             };
