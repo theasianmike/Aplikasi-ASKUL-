@@ -645,15 +645,23 @@
             };
 
             const renderEskulList = () => {
+                const isAdmin = sessionStorage.getItem('currentUser') === 'adminganteng123';
                 eskulListContainer.innerHTML = '';
                 allEskuls.forEach(eskul => {
                     const card = document.createElement('div');
-                    card.className = 'eskul-card group bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg hover:border-blue-400 cursor-pointer transition duration-300';
+                    card.className = 'eskul-card bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg hover:border-blue-400 transition duration-300 flex flex-col';
                     card.dataset.id = eskul.id;
                     const scheduleInfo = allSchedules.find(s => s.eskul_id === eskul.id);
                     card.innerHTML = `
-                        <h3 class="text-xl font-bold text-blue-700 group-hover:text-blue-600 transition">${eskul.name}</h3>
-                        <p class="text-gray-500 text-sm mt-1">${scheduleInfo ? `${scheduleInfo.day}, ${scheduleInfo.time}` : 'Jadwal belum diatur'}</p>
+                        <div class="flex-grow eskul-card-content cursor-pointer">
+                            <h3 class="text-xl font-bold text-blue-700 group-hover:text-blue-600 transition">${eskul.name}</h3>
+                            <p class="text-gray-500 text-sm mt-1">${scheduleInfo ? `${scheduleInfo.day}, ${scheduleInfo.time}` : 'Jadwal belum diatur'}</p>
+                        </div>
+                        ${isAdmin ? `
+                        <div class="mt-4 pt-4 border-t border-gray-100 text-right">
+                            <button data-id="${eskul.id}" class="delete-eskul-btn text-xs bg-red-50 text-red-600 hover:bg-red-100 font-semibold py-1 px-3 rounded-md transition duration-200 z-10 relative">Hapus</button>
+                        </div>
+                        ` : ''}
                     `;
                     eskulListContainer.appendChild(card);
                 });
@@ -770,7 +778,32 @@
             goToEskulListBtn.addEventListener('click', async () => { showLoader(); await getSchedules(); renderEskulList(); hideLoader(); showPage('eskulList'); });
             goToMyEskulBtn.addEventListener('click', async () => { showLoader(); await getSchedules(); renderMyEskulList(); hideLoader(); showPage('myEskulList'); });
            
-            eskulListContainer.addEventListener('click', (e) => { const card = e.target.closest('.eskul-card'); if (card) renderEskulDetail(card.dataset.id); });
+            eskulListContainer.addEventListener('click', (e) => {
+                const deleteBtn = e.target.closest('.delete-eskul-btn');
+                if (deleteBtn) {
+                    const eskulId = deleteBtn.dataset.id;
+                    const eskul = allEskuls.find(e => e.id == eskulId);
+                    if (eskul) {
+                        showCustomConfirm(`Yakin ingin menghapus eskul "${eskul.name}"? Semua jadwal terkait juga akan dihapus.`, async () => {
+                            showLoader();
+                            await supabaseClient.from('eskuls').delete().eq('id', eskulId);
+                            await getEskuls();
+                            await getSchedules();
+                            renderEskulList();
+                            hideLoader();
+                        });
+                    }
+                    return;
+                }
+
+                const cardContent = e.target.closest('.eskul-card-content');
+                if (cardContent) {
+                    const card = cardContent.closest('.eskul-card');
+                    if (card) {
+                        renderEskulDetail(card.dataset.id);
+                    }
+                }
+            });
             myEskulListContainer.addEventListener('click', (e) => { const card = e.target.closest('.my-eskul-card'); if (card) renderMyEskulDetail(card.dataset.id); });
            
             editEskulDetailBtn.addEventListener('click', () => { if (currentDetailPageId) { const eskulToEdit = allEskuls.find(e => e.id == currentDetailPageId); openEskulModal(eskulToEdit); } });
