@@ -16,7 +16,7 @@
         body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         .page { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; width: 100%; }
         .page.hidden { opacity: 0; transform: translateY(10px); pointer-events: none; position: absolute; }
-        .modal-backdrop { transition: opacity 0.2s ease-in-out; }
+        .modal-backdrop { transition: opacity 0.2s ease-in-out; z-index: 50; }
         .modal-backdrop > div { transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out; }
         .spinner { border: 2px solid rgba(0, 0, 0, 0.2); border-radius: 50%; border-top: 2px solid #2563eb; width: 16px; height: 16px; animation: spin 1s linear infinite; }
         .spinner-white { border: 2px solid rgba(255, 255, 255, 0.3); border-top: 2px solid #fff; }
@@ -352,6 +352,7 @@
                         <select id="new-user-role" class="w-full bg-white border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 outline-none">
                             <option value="murid">Murid</option>
                             <option value="guru">Guru</option>
+                            <option value="admin">Admin</option>
                         </select>
                     </div>
                     <div>
@@ -434,6 +435,7 @@
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 space-y-4 transform scale-95 opacity-0">
             <h2 id="members-modal-title" class="text-2xl font-bold text-gray-800">Edit Anggota Eskul</h2>
             <input type="hidden" id="members-eskul-id">
+            <p class="text-sm text-gray-500 bg-blue-50 p-2 rounded border border-blue-200">Tips: Ubah Jabatan atau Level langsung pada kolom di bawah. Perubahan tersimpan otomatis.</p>
             <div id="current-members-list" class="max-h-60 overflow-y-auto space-y-2 pr-2"></div>
             <form id="add-member-form" class="grid grid-cols-3 gap-2 pt-4 border-t border-gray-200">
                 <input type="text" id="member-name-input" placeholder="Nama Anggota" class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" required>
@@ -473,7 +475,7 @@
     </div>
 
     <!-- Kotak dialog konfirmasi kustom -->
-    <div id="custom-confirm-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden modal-backdrop">
+    <div id="custom-confirm-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden modal-backdrop" style="z-index: 10000;">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 space-y-4 text-center transform scale-95 opacity-0">
              <div class="mx-auto bg-red-100 text-red-600 w-12 h-12 rounded-full flex items-center justify-center mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -481,6 +483,18 @@
             <h3 id="confirm-title" class="text-lg font-bold text-gray-800">Apakah Anda yakin?</h3>
             <p id="confirm-text" class="text-gray-500 text-sm">Tindakan ini tidak dapat diurungkan.</p>
             <div class="flex justify-center gap-4 pt-4"><button id="confirm-cancel-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition">Batal</button><button id="confirm-ok-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">Hapus</button></div>
+        </div>
+    </div>
+
+    <!-- Kotak dialog ALERT kustom (Pengganti window.alert) -->
+    <div id="custom-alert-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden modal-backdrop" style="z-index: 10000;">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 space-y-4 text-center transform scale-95 opacity-0">
+             <div class="mx-auto bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+             </div>
+            <h3 class="text-lg font-bold text-gray-800">Informasi</h3>
+            <p id="alert-text" class="text-gray-500 text-sm"></p>
+            <div class="flex justify-center pt-4"><button id="alert-ok-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">OK</button></div>
         </div>
     </div>
 
@@ -499,6 +513,8 @@
             const globalLoader = document.getElementById('global-loader');
             const pages = { login: document.getElementById('login-page'), home: document.getElementById('home-page'), schedule: document.getElementById('schedule-page'), eskulList: document.getElementById('eskul-list-page'), eskulDetail: document.getElementById('eskul-detail-page'), myEskulList: document.getElementById('my-eskul-list-page'), myEskulDetail: document.getElementById('my-eskul-detail-page'), adminUser: document.getElementById('admin-user-page'), };
             const loginForm = document.getElementById('login-form'); const loginErrorMessage = document.getElementById('login-error-message'); const logoutButton = document.getElementById('logout-button'); const welcomeUser = document.getElementById('welcome-user'); const homeWelcomeUser = document.getElementById('home-welcome-user'); const scheduleBody = document.getElementById('schedule-body'); const managementPanel = document.getElementById('management-panel'); const announcementEditor = document.getElementById('announcement-editor'); const scheduleManagerActions = document.getElementById('schedule-manager-actions'); const actionHeader = document.getElementById('action-header'); const homeSearchInput = document.getElementById('home-search-input'); const goToScheduleBtn = document.getElementById('go-to-schedule-btn'); const goToEskulListBtn = document.getElementById('go-to-eskul-list-btn'); const goToMyEskulBtn = document.getElementById('go-to-my-eskul-btn'); const scheduleSearchInput = document.getElementById('schedule-search-input'); const backToHomeBtn = document.getElementById('back-to-home-btn'); const eskulListContainer = document.getElementById('eskul-list-container'); const myEskulListContainer = document.getElementById('my-eskul-list-container'); const backToHomeFromListBtn = document.getElementById('back-to-home-from-list-btn'); const backToHomeFromMyListBtn = document.getElementById('back-to-home-from-my-list-btn'); const detailEskulName = document.getElementById('detail-eskul-name'); const detailEskulDescription = document.getElementById('detail-eskul-description'); const detailEskulScheduleContainer = document.getElementById('detail-eskul-schedule-container'); const backToListBtn = document.getElementById('back-to-list-btn'); const editEskulDetailBtn = document.getElementById('edit-eskul-detail-btn'); const detailEskulMembersContainer = document.getElementById('detail-eskul-members-container'); const editEskulMembersBtn = document.getElementById('edit-eskul-members-btn'); const joinEskulBtn = document.getElementById('join-eskul-btn'); const becomePembimbingBtn = document.getElementById('become-pembimbing-btn'); const myDetailEskulName = document.getElementById('my-detail-eskul-name'); const myDetailEskulMembersContainer = document.getElementById('my-detail-eskul-members-container'); const backToMyListBtn = document.getElementById('back-to-my-list-btn'); const exclusiveInfoPanel = document.getElementById('exclusive-info-panel'); const exclusiveEditPanel = document.getElementById('exclusive-edit-panel'); const exclusiveAnnouncement = document.getElementById('exclusive-announcement'); const exclusiveNeeds = document.getElementById('exclusive-needs'); const exclusiveCash = document.getElementById('exclusive-cash'); const exclusiveEskulIdInput = document.getElementById('exclusive-eskul-id'); const exclusiveAnnouncementInput = document.getElementById('exclusive-announcement-input'); const exclusiveNeedsInput = document.getElementById('exclusive-needs-input'); const exclusiveCashInput = document.getElementById('exclusive-cash-input'); const saveExclusiveInfoBtn = document.getElementById('save-exclusive-info-btn'); const leaveEskulBtn = document.getElementById('leave-eskul-btn'); const announcementText = document.getElementById('announcement-text'); const announcementInput = document.getElementById('announcement-input'); const postAnnouncementBtn = document.getElementById('post-announcement-btn'); const membersModal = document.getElementById('members-modal'); const membersModalTitle = document.getElementById('members-modal-title'); const membersEskulIdInput = document.getElementById('members-eskul-id'); const currentMembersList = document.getElementById('current-members-list'); const addMemberForm = document.getElementById('add-member-form'); const closeMembersModalBtn = document.getElementById('close-members-modal-btn'); const confirmModal = document.getElementById('custom-confirm-modal'); const confirmText = document.getElementById('confirm-text'); const confirmOkBtn = document.getElementById('confirm-ok-btn'); const confirmCancelBtn = document.getElementById('confirm-cancel-btn'); let confirmCallback = null; let currentDetailPageId = null; const adminHomePanel = document.getElementById('admin-home-panel'); const goToAdminUsersBtn = document.getElementById('go-to-admin-users-btn'); const backToHomeFromUsersBtn = document.getElementById('back-to-home-from-users-btn'); const addUserForm = document.getElementById('add-user-form'); const addUserMessage = document.getElementById('add-user-message'); const userListContainer = document.getElementById('user-list-container'); const changePasswordBtn = document.getElementById('change-password-btn'); const changePasswordModal = document.getElementById('change-password-modal'); const changePasswordForm = document.getElementById('change-password-form'); const cancelChangePasswordBtn = document.getElementById('cancel-change-password-btn'); const changePasswordMessage = document.getElementById('change-password-message'); const adminChangePasswordModal = document.getElementById('admin-change-password-modal'); const adminChangePasswordForm = document.getElementById('admin-change-password-form'); const adminCancelChangePasswordBtn = document.getElementById('admin-cancel-change-password-btn'); const adminChangePasswordUsername = document.getElementById('admin-change-password-username'); const adminChangePasswordUserHidden = document.getElementById('admin-change-password-user-hidden'); const adminChangePasswordMessage = document.getElementById('admin-change-password-message');
+            // Elemen Modal Alert
+            const alertModal = document.getElementById('custom-alert-modal'); const alertText = document.getElementById('alert-text'); const alertOkBtn = document.getElementById('alert-ok-btn');
             // Elemen Modal Eskul
             const eskulModal = document.getElementById('eskul-modal'); const eskulModalTitle = document.getElementById('eskul-modal-title'); const eskulForm = document.getElementById('eskul-form'); const addEskulBtn = document.getElementById('add-eskul-btn'); const cancelEskulBtn = document.getElementById('cancel-eskul-btn'); const eskulIdInput = document.getElementById('eskul-id');
             // Elemen Modal Jadwal
@@ -522,7 +538,8 @@
             
             // --- FUNGSI OTORISASI ---
             const checkUserPermissions = (username) => {
-                const isAdmin = username === 'adminganteng123';
+                const role = sessionStorage.getItem('currentUserRole');
+                const isAdmin = username === 'adminganteng123' || role === 'admin';
                 const managedEskulIds = [];
                 if (!isAdmin) {
                     // Level 1, 2, atau 3 mendapatkan akses edit
@@ -543,6 +560,13 @@
             const openAnimatedModal = (modal) => { modal.classList.remove('hidden'); const content = modal.querySelector('.transform'); setTimeout(() => { content.classList.remove('scale-95', 'opacity-0');}, 10); };
             const closeAnimatedModal = (modal) => { const content = modal.querySelector('.transform'); content.classList.add('scale-95', 'opacity-0'); setTimeout(() => modal.classList.add('hidden'), 250); };
             
+            // FUNGSI ALERT KUSTOM
+            const showAlert = (message) => {
+                alertText.textContent = message;
+                openAnimatedModal(alertModal);
+            };
+            alertOkBtn.addEventListener('click', () => closeAnimatedModal(alertModal));
+
             const renderAnnouncement = async () => { announcementText.innerText = await getAnnouncement(); };
 
             const renderEskulMembers = (container, members) => {
@@ -583,7 +607,7 @@
                
                 const currentUser = sessionStorage.getItem('currentUser'); 
                 const currentUserRole = sessionStorage.getItem('currentUserRole');
-                const isAdmin = currentUser === 'adminganteng123';
+                const isAdmin = currentUser === 'adminganteng123' || currentUserRole === 'admin';
                 const isMember = eskul.members && eskul.members.some(m => m.name === currentUser);
                 const hasPembimbing = eskul.members && eskul.members.some(m => m.role.toLowerCase() === 'pembimbing');
 
@@ -693,7 +717,9 @@
             };
 
             const renderEskulList = () => {
-                const isAdmin = sessionStorage.getItem('currentUser') === 'adminganteng123';
+                const currentUser = sessionStorage.getItem('currentUser');
+                const currentRole = sessionStorage.getItem('currentUserRole');
+                const isAdmin = currentUser === 'adminganteng123' || currentRole === 'admin';
                 eskulListContainer.innerHTML = '';
                 allEskuls.forEach(eskul => {
                     const card = document.createElement('div');
@@ -790,7 +816,7 @@
                         memberEl.innerHTML = `
                             <div class="flex-grow grid grid-cols-2 gap-2">
                                 <div>
-                                    <p class="font-medium">${member.name}</p>
+                                    <p class="font-medium" data-name="${member.name}">${member.name}</p>
                                     <input type="text" value="${member.role}" data-name="${member.name}" class="member-role-input mt-1 w-full bg-white border border-gray-300 rounded-md p-1 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Jabatan">
                                 </div>
                                 <div>
@@ -834,6 +860,7 @@
                             <select data-username="${user.username}" class="role-select w-28 bg-white border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                                 <option value="murid" ${user.role === 'murid' ? 'selected' : ''}>Murid</option>
                                 <option value="guru" ${user.role === 'guru' ? 'selected' : ''}>Guru</option>
+                                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
                             </select>
                             <button data-username="${user.username}" class="change-user-password-btn bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-3 rounded-lg transition text-sm whitespace-nowrap">Ubah Pass</button>
                             <button data-username="${user.username}" class="delete-user-btn bg-red-100 text-red-600 hover:bg-red-200 font-semibold py-2 px-3 rounded-lg transition text-sm">Hapus</button>
@@ -899,6 +926,7 @@
             goToAdminUsersBtn.addEventListener('click', async () => { showLoader(); await renderUserList(); hideLoader(); showPage('adminUser'); });
             backToHomeFromUsersBtn.addEventListener('click', () => showPage('home'));
             
+            // Event Listener: Hapus Anggota dan EDIT ANGGOTA (Role & Level)
             currentMembersList.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('delete-member-btn')) {
                     const nameToDelete = e.target.dataset.name;
@@ -909,6 +937,44 @@
                         const updatedMembers = eskul.members.filter(m => m.name !== nameToDelete);
                         await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
                         await getEskuls(); renderMembersInModal(eskulId);
+                        hideLoader();
+                    }
+                }
+            });
+
+            // Event Listener baru: Menangani perubahan Input (Role & Level) di Modal Anggota
+            currentMembersList.addEventListener('change', async (e) => {
+                if (e.target.classList.contains('member-role-input') || e.target.classList.contains('member-level-input')) {
+                    const nameToUpdate = e.target.dataset.name;
+                    const eskulId = membersEskulIdInput.value;
+                    const eskul = allEskuls.find(e => e.id == eskulId);
+                    
+                    if (eskul) {
+                        const row = e.target.closest('.member-row');
+                        const newRole = row.querySelector('.member-role-input').value;
+                        const newLevel = parseInt(row.querySelector('.member-level-input').value) || 99;
+
+                        showLoader();
+                        // Update array anggota lokal
+                        const updatedMembers = eskul.members.map(m => {
+                            if (m.name === nameToUpdate) {
+                                return { ...m, role: newRole, level: newLevel };
+                            }
+                            return m;
+                        });
+
+                        // Kirim update ke Supabase
+                        const { error } = await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
+                        
+                        if (error) {
+                            showAlert('Gagal menyimpan perubahan anggota.');
+                        } else {
+                            // Refresh data lokal
+                            await getEskuls();
+                            // Optional: re-render modal jika ingin update urutan sorting langsung, 
+                            // tapi bisa mengganggu fokus input jika user mengetik cepat.
+                            // Kita biarkan user selesai mengedit dulu.
+                        }
                         hideLoader();
                     }
                 }
@@ -931,7 +997,7 @@
                         .eq('username', username);
 
                     if (error) {
-                        alert('Gagal memperbarui peran pengguna. Silakan coba lagi.');
+                        showAlert('Gagal memperbarui peran pengguna. Silakan coba lagi.');
                         // Jika gagal, render ulang untuk mengembalikan ke nilai lama
                         await renderUserList(); 
                     } else {
@@ -1011,7 +1077,7 @@
                 if (name && role) { 
                     const eskul = allEskuls.find(e => e.id == eskulId);
                     if (eskul) {
-                        if (eskul.members.some(m => m.name === name)) { alert('Nama anggota sudah ada di eskul ini.'); return; } 
+                        if (eskul.members.some(m => m.name === name)) { showAlert('Nama anggota sudah ada di eskul ini.'); return; } 
                         showLoader();
                         const updatedMembers = [...eskul.members, { name, role, level }]; // Tambahkan level
                         await supabaseClient.from('eskuls').update({ members: updatedMembers }).eq('id', eskulId);
@@ -1064,7 +1130,7 @@
 
             joinEskulBtn.addEventListener('click', async () => {
                 const currentUser = sessionStorage.getItem('currentUser');
-                if (sessionStorage.getItem('currentUserRole') !== 'murid') { alert('Hanya akun murid yang bisa mendaftar eskul.'); return; }
+                if (sessionStorage.getItem('currentUserRole') !== 'murid') { showAlert('Hanya akun murid yang bisa mendaftar eskul.'); return; }
                 const eskul = allEskuls.find(e => e.id == currentDetailPageId);
                 if (eskul) {
                     if (!eskul.members.some(m => m.name === currentUser)) {
@@ -1074,18 +1140,18 @@
                         await getEskuls();
                         renderEskulDetail(currentDetailPageId);
                         hideLoader();
-                        alert(`Anda berhasil terdaftar di eskul ${eskul.name}!`);
+                        showAlert(`Anda berhasil terdaftar di eskul ${eskul.name}!`);
                     }
                 }
             });
 
             becomePembimbingBtn.addEventListener('click', async () => {
                 const currentUser = sessionStorage.getItem('currentUser');
-                if (sessionStorage.getItem('currentUserRole') !== 'guru') { alert('Hanya akun guru yang bisa menjadi pembimbing.'); return; }
+                if (sessionStorage.getItem('currentUserRole') !== 'guru') { showAlert('Hanya akun guru yang bisa menjadi pembimbing.'); return; }
                 const eskul = allEskuls.find(e => e.id == currentDetailPageId);
                 if (eskul) {
                     if (eskul.members.some(m => m.role.toLowerCase() === 'pembimbing')) {
-                        alert('Eskul ini sudah memiliki pembimbing.');
+                        showAlert('Eskul ini sudah memiliki pembimbing.');
                         renderEskulDetail(currentDetailPageId); return;
                     }
                     if (!eskul.members.some(m => m.name === currentUser)) {
@@ -1096,7 +1162,7 @@
                             await getEskuls();
                             await initializeApp(currentUser); // Re-initialize to update permissions
                             renderEskulDetail(currentDetailPageId);
-                            alert(`Anda berhasil menjadi Pembimbing untuk eskul ${eskul.name}!`);
+                            showAlert(`Anda berhasil menjadi Pembimbing untuk eskul ${eskul.name}!`);
                         }
                         hideLoader();
                     }
